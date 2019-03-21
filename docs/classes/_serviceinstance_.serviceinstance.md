@@ -17,6 +17,7 @@ the service's entrypoint
 ### Properties
 
 * [app](_serviceinstance_.serviceinstance.md#app)
+* [server](_serviceinstance_.serviceinstance.md#server)
 
 ### Methods
 
@@ -24,6 +25,7 @@ the service's entrypoint
 * [isDevEnv](_serviceinstance_.serviceinstance.md#isdevenv)
 * [listen](_serviceinstance_.serviceinstance.md#listen)
 * [setupRoutes](_serviceinstance_.serviceinstance.md#setuproutes)
+* [stop](_serviceinstance_.serviceinstance.md#stop)
 
 ---
 
@@ -35,7 +37,7 @@ the service's entrypoint
 
 ⊕ **new ServiceInstance**(): [ServiceInstance](_serviceinstance_.serviceinstance.md)
 
-*Defined in serviceinstance.ts:16*
+*Defined in [serviceinstance.ts:18](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L18)*
 
 **Returns:** [ServiceInstance](_serviceinstance_.serviceinstance.md)
 
@@ -49,7 +51,16 @@ ___
 
 **● app**: *`express.Express`*
 
-*Defined in serviceinstance.ts:16*
+*Defined in [serviceinstance.ts:17](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L17)*
+
+___
+<a id="server"></a>
+
+### `<Private>` server
+
+**● server**: *`Server`*
+
+*Defined in [serviceinstance.ts:18](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L18)*
 
 ___
 
@@ -61,7 +72,7 @@ ___
 
 ▸ **applyConfigs**(): `void`
 
-*Defined in serviceinstance.ts:38*
+*Defined in [serviceinstance.ts:44](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L44)*
 
 apply configurations to the service
 
@@ -74,7 +85,7 @@ ___
 
 ▸ **isDevEnv**(): `boolean`
 
-*Defined in serviceinstance.ts:67*
+*Defined in [serviceinstance.ts:73](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L73)*
 
 are we in a development environment?
 
@@ -88,7 +99,7 @@ ___
 
 ▸ **listen**(): `void`
 
-*Defined in serviceinstance.ts:30*
+*Defined in [serviceinstance.ts:32](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L32)*
 
 start the service
 
@@ -101,9 +112,20 @@ ___
 
 ▸ **setupRoutes**(): `void`
 
-*Defined in serviceinstance.ts:58*
+*Defined in [serviceinstance.ts:64](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L64)*
 
 setup the service's API routes
+
+**Returns:** `void`
+
+___
+<a id="stop"></a>
+
+###  stop
+
+▸ **stop**(): `void`
+
+*Defined in [serviceinstance.ts:37](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L37)*
 
 **Returns:** `void`
 

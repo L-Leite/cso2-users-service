@@ -17,9 +17,10 @@ I'm not affiliated with either Valve or Nexon, just like I don't own Counter-Str
 
 ### External modules
 
-* ["api/inventoryroute"](modules/_api_inventoryroute_.md)
-* ["api/usersroute"](modules/_api_usersroute_.md)
+* ["log/loginstance"](modules/_log_loginstance_.md)
 * ["log/morgan2winston"](modules/_log_morgan2winston_.md)
+* ["routes/inventory"](modules/_routes_inventory_.md)
+* ["routes/users"](modules/_routes_users_.md)
 * ["service"](modules/_service_.md)
 * ["serviceinstance"](modules/_serviceinstance_.md)
 

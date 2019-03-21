@@ -1,4 +1,4 @@
-[cso2-users-service](../README.md) > ["api/inventoryroute"](../modules/_api_inventoryroute_.md) > [InventoryRoute](../classes/_api_inventoryroute_.inventoryroute.md)
+[cso2-users-service](../README.md) > ["routes/inventory"](../modules/_routes_inventory_.md) > [InventoryRoute](../classes/_routes_inventory_.inventoryroute.md)
 
 # Class: InventoryRoute
 
@@ -12,19 +12,19 @@ handles requests to /users/:userId/inventory
 
 ### Constructors
 
-* [constructor](_api_inventoryroute_.inventoryroute.md#constructor)
+* [constructor](_routes_inventory_.inventoryroute.md#constructor)
 
 ### Methods
 
-* [onDeleteInventory](_api_inventoryroute_.inventoryroute.md#ondeleteinventory)
-* [onGetInventory](_api_inventoryroute_.inventoryroute.md#ongetinventory)
-* [onGetInventoryBuyMenu](_api_inventoryroute_.inventoryroute.md#ongetinventorybuymenu)
-* [onGetInventoryCosmetics](_api_inventoryroute_.inventoryroute.md#ongetinventorycosmetics)
-* [onGetInventoryLoadout](_api_inventoryroute_.inventoryroute.md#ongetinventoryloadout)
-* [onPostInventory](_api_inventoryroute_.inventoryroute.md#onpostinventory)
-* [onPostInventoryBuyMenu](_api_inventoryroute_.inventoryroute.md#onpostinventorybuymenu)
-* [onPostInventoryCosmetics](_api_inventoryroute_.inventoryroute.md#onpostinventorycosmetics)
-* [onPostInventoryLoadout](_api_inventoryroute_.inventoryroute.md#onpostinventoryloadout)
+* [onDeleteInventory](_routes_inventory_.inventoryroute.md#ondeleteinventory)
+* [onGetInventory](_routes_inventory_.inventoryroute.md#ongetinventory)
+* [onGetInventoryBuyMenu](_routes_inventory_.inventoryroute.md#ongetinventorybuymenu)
+* [onGetInventoryCosmetics](_routes_inventory_.inventoryroute.md#ongetinventorycosmetics)
+* [onGetInventoryLoadout](_routes_inventory_.inventoryroute.md#ongetinventoryloadout)
+* [onPostInventory](_routes_inventory_.inventoryroute.md#onpostinventory)
+* [onPostInventoryBuyMenu](_routes_inventory_.inventoryroute.md#onpostinventorybuymenu)
+* [onPostInventoryCosmetics](_routes_inventory_.inventoryroute.md#onpostinventorycosmetics)
+* [onPostInventoryLoadout](_routes_inventory_.inventoryroute.md#onpostinventoryloadout)
 
 ---
 
@@ -34,9 +34,9 @@ handles requests to /users/:userId/inventory
 
 ###  constructor
 
-⊕ **new InventoryRoute**(app: *`express.Express`*): [InventoryRoute](_api_inventoryroute_.inventoryroute.md)
+⊕ **new InventoryRoute**(app: *`express.Express`*): [InventoryRoute](_routes_inventory_.inventoryroute.md)
 
-*Defined in api/inventoryroute.ts:50*
+*Defined in [routes/inventory.ts:50](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L50)*
 
 **Parameters:**
 
@@ -44,7 +44,7 @@ handles requests to /users/:userId/inventory
 | ------ | ------ |
 | app | `express.Express` |
 
-**Returns:** [InventoryRoute](_api_inventoryroute_.inventoryroute.md)
+**Returns:** [InventoryRoute](_routes_inventory_.inventoryroute.md)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 ▸ **onDeleteInventory**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:146*
+*Defined in [routes/inventory.ts:146](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L146)*
 
 called when a DELETE request to /users/:userId/inventory is done deletes an item in an user's invetory returns 200 if deleted successfully returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -77,7 +77,7 @@ ___
 
 ▸ **onGetInventory**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:77*
+*Defined in [routes/inventory.ts:77](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L77)*
 
 called when a GET request to /users/:userId/inventory is done returns an user's inventory items returns 200 if successful returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -98,7 +98,7 @@ ___
 
 ▸ **onGetInventoryBuyMenu**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:315*
+*Defined in [routes/inventory.ts:328](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L328)*
 
 called when a GET request to /users/:userId/inventory/buymenu is done gets an user's buy menu returns 200 if successful returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -119,7 +119,7 @@ ___
 
 ▸ **onGetInventoryCosmetics**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:177*
+*Defined in [routes/inventory.ts:177](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L177)*
 
 called when a GET request to /users/:userId/inventory/cosmetics is done gets the currently equipped user's cosmetics returns 200 if successful returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -140,7 +140,7 @@ ___
 
 ▸ **onGetInventoryLoadout**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:246*
+*Defined in [routes/inventory.ts:253](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L253)*
 
 called when a GET request to /users/:userId/inventory/loadout is done gets an user's loadout returns 200 if successful returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -161,7 +161,7 @@ ___
 
 ▸ **onPostInventory**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:116*
+*Defined in [routes/inventory.ts:116](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L116)*
 
 called when a POST request to /users/:userId/inventory is done adds an item to an user's inventory returns 200 if added successfully returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -182,7 +182,7 @@ ___
 
 ▸ **onPostInventoryBuyMenu**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:455*
+*Defined in [routes/inventory.ts:444](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L444)*
 
 called when a POST request to /users/:userId/inventory/buymenu is done sets an user's sub buy menu returns 200 if set successfully returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -203,7 +203,7 @@ ___
 
 ▸ **onPostInventoryCosmetics**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:216*
+*Defined in [routes/inventory.ts:216](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L216)*
 
 called when a POST request to /users/:userId/inventory/cosmetics is done sets an user's equipped cosmetics returns 200 if set successfully returns 400 if the request is malformed returns 404 if the user doesn't exist
 
@@ -224,7 +224,7 @@ ___
 
 ▸ **onPostInventoryLoadout**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
 
-*Defined in api/inventoryroute.ts:285*
+*Defined in [routes/inventory.ts:292](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/inventory.ts#L292)*
 
 called when a POST request to /users/:userId/inventory/cosmetics is done sets an user's equipped cosmetics returns 200 if set successfully returns 400 if the request is malformed returns 404 if the user doesn't exist
 
