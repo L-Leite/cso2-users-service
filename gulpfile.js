@@ -3,6 +3,7 @@
 var cached = require('gulp-cached')
 var del = require('delete')
 var gulp = require('gulp')
+var mocha = require('gulp-mocha')
 var nodemon = require('gulp-nodemon')
 var sourcemaps = require('gulp-sourcemaps');
 var ts = require('gulp-typescript')
@@ -105,6 +106,14 @@ gulp.task('typedoc', gulp.series(
   'clean:docs',
   'readme'
 ))
+
+gulp.task('test', () => {
+  util.log('Testing code...')
+  return gulp.src('test/**/*.ts')
+    .pipe(mocha({
+      require: 'ts-node/register'
+    }))
+})
 
 gulp.task('default', gulp.series(
   'clean:dist',
