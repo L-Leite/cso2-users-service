@@ -1,7 +1,7 @@
 #%RAML 1.0
 title: CSO2 User Service
 description: The user's service API, meant to be used internally. Should an authentication method be used?
-version: 0.0.1
+version: 0.0.2
 
 types:
   # shared data types
@@ -114,7 +114,7 @@ types:
     description: An user's inventory sub buy menu details.
     properties:
       index:
-        type: number 
+        type: integer 
       weapons:
         type: integer[]
         minItems: 0
@@ -123,28 +123,28 @@ types:
     description: An user's inventory buy menu details.
     properties: 
       pistols: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's pistols buy sub menu
       shotguns: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's shotguns buy sub menu
       smgs: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's SMGs buy sub menu
       rifles: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's rifles buy sub menu
       snipers: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's snipers buy sub menu
       machineguns: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's machine guns buy sub menu
       melees: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's melees buy sub menu
       equipment: 
-        type: UserBuySubMenu
+        type: integer[]
         description: The user's equipment buy sub menu
 
   # requests/responses  
@@ -375,98 +375,82 @@ types:
                 description: The current buy menu data.
                 example:
                   pistols: 
-                    index: 0
-                    weapons:
-                      - 5271
-                      - 5245
-                      - 5358
-                      - 5288
-                      - 106
-                      - 5119
-                      - 5121
-                      - 5360
-                      - 5294
+                    - 5271
+                    - 5245
+                    - 5358
+                    - 5288
+                    - 106
+                    - 5119
+                    - 5121
+                    - 5360
+                    - 5294
                   shotguns: 
-                    index: 1
-                    weapons:
-                      - 5130
-                      - 5181
-                      - 5157
-                      - 5282
-                      - 5286
-                      - 5343
-                      - 5264
-                      - 5265
-                      - 5230
+                    - 5130
+                    - 5181
+                    - 5157
+                    - 5282
+                    - 5286
+                    - 5343
+                    - 5264
+                    - 5265
+                    - 5230
                   smgs: 
-                    index: 2
-                    weapons:
-                      - 5251
-                      - 5295
-                      - 162
-                      - 5132
-                      - 5346
-                      - 5320
-                      - 5287
-                      - 5321
-                      - 5310
+                    - 5251
+                    - 5295
+                    - 162
+                    - 5132
+                    - 5346
+                    - 5320
+                    - 5287
+                    - 5321
+                    - 5310
                   rifles: 
-                    index: 3
-                    weapons:
-                      - 5136
-                      - 5142
-                      - 45
-                      - 46
-                      - 5218
-                      - 5240
-                      - 5259
-                      - 5309
-                      - 5370
+                    - 5136
+                    - 5142
+                    - 45
+                    - 46
+                    - 5218
+                    - 5240
+                    - 5259
+                    - 5309
+                    - 5370
                   snipers: 
-                    index: 4
-                    weapons:
-                      - 5133
-                      - 5118
-                      - 5216
-                      - 86
-                      - 5338
-                      - 5241
-                      - 5225
-                      - 5369
-                      - 5244
+                    - 5133
+                    - 5118
+                    - 5216
+                    - 86
+                    - 5338
+                    - 5241
+                    - 5225
+                    - 5369
+                    - 5244
                   machineguns: 
-                    index: 5
-                    weapons:
-                      - 5125
-                      - 5289
-                      - 5226
-                      - 5332
-                      - 5352
-                      - 5363
-                      - 5311
-                      - 5260
-                      - 5234
+                    - 5125
+                    - 5289
+                    - 5226
+                    - 5332
+                    - 5352
+                    - 5363
+                    - 5311
+                    - 5260
+                    - 5234
                   melees: 
-                    index: 6
-                    weapons:
-                      - 5353
-                      - 5362
-                      - 5330
-                      - 5303
-                      - 5304
-                      - 5305
-                      - 5365
-                      - 5231
-                      - 5232
+                    - 5353
+                    - 5362
+                    - 5330
+                    - 5303
+                    - 5304
+                    - 5305
+                    - 5365
+                    - 5231
+                    - 5232
                   equipment: 
-                    index: 7
-                    weapons:
-                      - 36
-                      - 37
-                      - 23
-                      - 4
-                      - 7
-                      - 34
+                    - 36
+                    - 37
+                    - 23
+                    - 4
+                    - 7
+                    - 34
           400:
             description: The request is malformed.
           404:
@@ -510,6 +494,13 @@ types:
       responses:
         201:
           description: The user was created sucessfully.
+          body:
+            application/json:   
+              properties:
+                userId:
+                  type: integer
+                  description: The new user's ID.
+                  example: 654321
         400:
           description: The request is malformed.
         409:
@@ -553,5 +544,3 @@ types:
           description: The user was logged out sucessfully.
         400:
           description: The request is malformed.
-        404:
-          description: The user does not exist.

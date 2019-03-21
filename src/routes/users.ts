@@ -1,14 +1,11 @@
 import express from 'express'
 
-import { LogInstance } from 'log/LogInstance'
+import { LogInstance } from 'log/loginstance'
 
 /**
  * handles requests to /users
  */
 export class UsersRoute {
-  private static getNumOfParams(req: express.Request): number {
-    return Object.keys(req.params).length
-  }
 
   constructor(app: express.Express) {
     app.route('/users')
@@ -33,11 +30,11 @@ export class UsersRoute {
    * @param next the next request handler
    */
   private onGetUsers(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`GET request to /users from ${req.ip}`)
+    LogInstance.info(`GET request to /users`)
 
     // return bad request if there are parameters in the request
     // TODO: is this needed?
-    if (UsersRoute.getNumOfParams(req) !== 0) {
+    if (Object.keys(req.query).length !== 0) {
       return res.status(400).end()
     }
 
@@ -71,12 +68,10 @@ export class UsersRoute {
   private onGetUsersUserId(req: express.Request, res: express.Response, next: express.NextFunction): void {
     const reqUserId: number = Number(req.params.userId)
 
-    LogInstance.info(`GET request to /users/${reqUserId} from ${req.ip}`)
+    LogInstance.info(`GET request to /users/${reqUserId}`)
 
-    // return bad request if there is more than one parameter in the request
-    // or if the userId isn't a number
-    if (UsersRoute.getNumOfParams(req) !== 1
-      || isNaN(reqUserId)) {
+    // return bad request if the userId isn't a number
+    if (isNaN(reqUserId)) {
       return res.status(400).end()
     }
 
@@ -113,7 +108,7 @@ export class UsersRoute {
    * @param next the next request handler
    */
   private onPostSignup(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`POST request to /users/signup from ${req.ip}`)
+    LogInstance.info(`POST request to /users/signup`)
 
     const userName: string = req.body.username
     const playerName: string = req.body.playername
@@ -130,8 +125,12 @@ export class UsersRoute {
       return res.status(409).end()
     }*/
 
+    const sampleResponse = {
+      userId: 654321,
+    }
+
     // return created
-    res.status(201).end()
+    res.status(201).json(sampleResponse)
   }
 
   /**
@@ -145,7 +144,7 @@ export class UsersRoute {
    * @param next the next request handler
    */
   private onPutLogin(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`PUT request to /users/login from ${req.ip}`)
+    LogInstance.info(`PUT request to /users/login`)
 
     const userName: string = req.body.username
     const password: string = req.body.password
@@ -181,18 +180,14 @@ export class UsersRoute {
    * @param next the next request handler
    */
   private onPutLogout(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`PUT request to /users/login from ${req.ip}`)
+    LogInstance.info(`PUT request to /users/login`)
 
-    const userId: number = Number(req.body.userid)
+    const userId: number = Number(req.body.userId)
 
     // return bad request if the required body params arent present
-    if (userId == null) {
+    if (isNaN(userId) === true) {
       return res.status(400).end()
     }
-
-    /*if (the user doesnt exist) {
-      return res.status(404).end()
-    }*/
 
     // return OK
     res.status(200).end()

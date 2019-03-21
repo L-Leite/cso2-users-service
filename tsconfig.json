@@ -8,7 +8,9 @@
         "outDir": "dist",
         "sourceMap": true,
         "paths": {
-            "*": ["src/*"]
+            "*": [
+                "src/*"
+            ]
         },
         "target": "es6"
     },

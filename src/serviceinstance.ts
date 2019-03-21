@@ -1,9 +1,10 @@
 import bodyParser from 'body-parser'
 import express from 'express'
 import helmet from 'helmet'
+import http from 'http'
 import morgan from 'morgan'
 
-import { LogInstance } from 'log/LogInstance'
+import { LogInstance } from 'log/loginstance'
 import { MorganToWinstonStream } from 'log/morgan2winston'
 
 import { InventoryRoute } from 'routes/inventory'
@@ -14,6 +15,7 @@ import { UsersRoute } from 'routes/users'
  */
 export class ServiceInstance {
   public app: express.Express
+  private server: http.Server
 
   constructor() {
     this.app = express()
@@ -28,8 +30,12 @@ export class ServiceInstance {
    * start the service
    */
   public listen(): void {
-    this.app.listen(this.app.get('port'))
+    this.server = this.app.listen(this.app.get('port'))
     LogInstance.info('Started user service')
+  }
+
+  public stop(): void {
+    this.server.close()
   }
 
   /**
