@@ -23,7 +23,7 @@ export class ServiceInstance {
     this.applyConfigs()
     this.setupRoutes()
 
-    this.app.set('port', 42069)
+    this.app.set('port', process.env.PORT)
   }
 
   /**
