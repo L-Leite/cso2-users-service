@@ -1,6 +1,7 @@
 'use strict'
 
 var cached = require('gulp-cached')
+var childProcess = require('child_process');
 var del = require('delete')
 var gulp = require('gulp')
 var mocha = require('gulp-mocha')
@@ -99,7 +100,9 @@ gulp.task('build', gulp.series(
 
 gulp.task('run:dev', gulp.series(
   'typescript',
-  'watch:dev'
+  () => {
+    childProcess.spawn('node', ['dist/service.js'], { stdio: 'pipe' });
+  }
 ))
 
 gulp.task('typedoc', gulp.series(
