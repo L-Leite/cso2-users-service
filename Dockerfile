@@ -6,11 +6,19 @@ WORKDIR /srv/users-service
 # get dependencies
 COPY package*.json ./
 
+# get source code
+COPY src ./src
+
+# get build files
+COPY gulpfile.js ./
+COPY ts*.json ./
+
+# install npm dependencies
 RUN npm ci
 RUN npm i -g gulp
 
-# Bundle app source
-COPY . .
+# build app from source
+RUN gulp build
 
-EXPOSE 30100
-CMD [ "gulp", "run:dev" ]
+# start the service
+CMD [ "node", "dist/service.js" ]
