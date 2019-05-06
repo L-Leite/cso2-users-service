@@ -1,7 +1,0 @@
-{
-  "restartable": "rs",
-  "verbose": true,
-  "tasks": ["typescript"],
-  "script": "dist/service.js",
-  "ext": "ts"
-}
