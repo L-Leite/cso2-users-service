@@ -16,6 +16,7 @@ sets up and stores the winston logger
 
 ### Methods
 
+* [debug](_log_loginstance_.loginstance.md#debug)
 * [error](_log_loginstance_.loginstance.md#error)
 * [info](_log_loginstance_.loginstance.md#info)
 * [init](_log_loginstance_.loginstance.md#init)
@@ -31,19 +32,38 @@ sets up and stores the winston logger
 
 **● logger**: *`Logger`*
 
-*Defined in [log/loginstance.ts:55](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/loginstance.ts#L55)*
+*Defined in [log/loginstance.ts:59](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L59)*
 
 ___
 
 ## Methods
 
+<a id="debug"></a>
+
+### `<Static>` debug
+
+▸ **debug**(message: *`string`*): `void`
+
+*Defined in [log/loginstance.ts:11](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L11)*
+
+log a debug type message
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| message | `string` |  the message to log |
+
+**Returns:** `void`
+
+___
 <a id="error"></a>
 
 ### `<Static>` error
 
 ▸ **error**(message: *`string`*): `void`
 
-*Defined in [log/loginstance.ts:13](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/loginstance.ts#L13)*
+*Defined in [log/loginstance.ts:19](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L19)*
 
 log a error type message
 
@@ -62,7 +82,7 @@ ___
 
 ▸ **info**(message: *`string`*): `void`
 
-*Defined in [log/loginstance.ts:22](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/loginstance.ts#L22)*
+*Defined in [log/loginstance.ts:27](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L27)*
 
 log a information type message
 
@@ -81,7 +101,7 @@ ___
 
 ▸ **init**(): `void`
 
-*Defined in [log/loginstance.ts:38](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/loginstance.ts#L38)*
+*Defined in [log/loginstance.ts:42](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L42)*
 
 setup winston logger
 
@@ -94,7 +114,7 @@ ___
 
 ▸ **warn**(message: *`string`*): `void`
 
-*Defined in [log/loginstance.ts:31](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/loginstance.ts#L31)*
+*Defined in [log/loginstance.ts:35](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/loginstance.ts#L35)*
 
 log a warning type message
 

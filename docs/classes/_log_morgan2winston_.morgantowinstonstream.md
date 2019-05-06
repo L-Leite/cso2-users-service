@@ -26,7 +26,7 @@ writes logged data from morgan to a winston logger instance
 
 ▸ **write**(str: *`string`*): `void`
 
-*Defined in [log/morgan2winston.ts:11](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/log/morgan2winston.ts#L11)*
+*Defined in [log/morgan2winston.ts:11](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/log/morgan2winston.ts#L11)*
 
 Output stream for writing log lines.
 

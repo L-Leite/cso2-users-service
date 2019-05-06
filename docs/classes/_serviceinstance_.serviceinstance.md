@@ -24,8 +24,10 @@ the service's entrypoint
 * [applyConfigs](_serviceinstance_.serviceinstance.md#applyconfigs)
 * [isDevEnv](_serviceinstance_.serviceinstance.md#isdevenv)
 * [listen](_serviceinstance_.serviceinstance.md#listen)
+* [setupDb](_serviceinstance_.serviceinstance.md#setupdb)
 * [setupRoutes](_serviceinstance_.serviceinstance.md#setuproutes)
 * [stop](_serviceinstance_.serviceinstance.md#stop)
+* [checkEnvVars](_serviceinstance_.serviceinstance.md#checkenvvars)
 
 ---
 
@@ -37,7 +39,7 @@ the service's entrypoint
 
 ⊕ **new ServiceInstance**(): [ServiceInstance](_serviceinstance_.serviceinstance.md)
 
-*Defined in [serviceinstance.ts:18](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L18)*
+*Defined in [serviceinstance.ts:42](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L42)*
 
 **Returns:** [ServiceInstance](_serviceinstance_.serviceinstance.md)
 
@@ -51,7 +53,7 @@ ___
 
 **● app**: *`express.Express`*
 
-*Defined in [serviceinstance.ts:17](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L17)*
+*Defined in [serviceinstance.ts:41](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L41)*
 
 ___
 <a id="server"></a>
@@ -60,7 +62,7 @@ ___
 
 **● server**: *`Server`*
 
-*Defined in [serviceinstance.ts:18](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L18)*
+*Defined in [serviceinstance.ts:42](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L42)*
 
 ___
 
@@ -72,7 +74,7 @@ ___
 
 ▸ **applyConfigs**(): `void`
 
-*Defined in [serviceinstance.ts:44](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L44)*
+*Defined in [serviceinstance.ts:99](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L99)*
 
 apply configurations to the service
 
@@ -85,9 +87,9 @@ ___
 
 ▸ **isDevEnv**(): `boolean`
 
-*Defined in [serviceinstance.ts:73](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L73)*
+*Defined in [serviceinstance.ts:127](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L127)*
 
-are we in a development environment?
+are we in a development environment
 
 **Returns:** `boolean`
 true if so, false if not
@@ -99,9 +101,22 @@ ___
 
 ▸ **listen**(): `void`
 
-*Defined in [serviceinstance.ts:32](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L32)*
+*Defined in [serviceinstance.ts:60](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L60)*
 
 start the service
+
+**Returns:** `void`
+
+___
+<a id="setupdb"></a>
+
+### `<Private>` setupDb
+
+▸ **setupDb**(): `void`
+
+*Defined in [serviceinstance.ts:77](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L77)*
+
+setup the database connection
 
 **Returns:** `void`
 
@@ -112,7 +127,7 @@ ___
 
 ▸ **setupRoutes**(): `void`
 
-*Defined in [serviceinstance.ts:64](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L64)*
+*Defined in [serviceinstance.ts:119](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L119)*
 
 setup the service's API routes
 
@@ -125,7 +140,22 @@ ___
 
 ▸ **stop**(): `void`
 
-*Defined in [serviceinstance.ts:37](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/serviceinstance.ts#L37)*
+*Defined in [serviceinstance.ts:69](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L69)*
+
+stop the service instance
+
+**Returns:** `void`
+
+___
+<a id="checkenvvars"></a>
+
+### `<Static>``<Private>` checkEnvVars
+
+▸ **checkEnvVars**(): `void`
+
+*Defined in [serviceinstance.ts:23](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/serviceinstance.ts#L23)*
+
+check if the required environment variables are set on start throws an error if one is missing
 
 **Returns:** `void`
 

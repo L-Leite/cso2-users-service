@@ -16,11 +16,17 @@ handles requests to /users
 
 ### Methods
 
+* [onDeleteSession](_routes_users_.usersroute.md#ondeletesession)
+* [onDeleteUserById](_routes_users_.usersroute.md#ondeleteuserbyid)
+* [onGetPing](_routes_users_.usersroute.md#ongetping)
+* [onGetSession](_routes_users_.usersroute.md#ongetsession)
 * [onGetUsers](_routes_users_.usersroute.md#ongetusers)
-* [onGetUsersUserId](_routes_users_.usersroute.md#ongetusersuserid)
-* [onPostSignup](_routes_users_.usersroute.md#onpostsignup)
-* [onPutLogin](_routes_users_.usersroute.md#onputlogin)
-* [onPutLogout](_routes_users_.usersroute.md#onputlogout)
+* [onGetUsersById](_routes_users_.usersroute.md#ongetusersbyid)
+* [onGetUsersByName](_routes_users_.usersroute.md#ongetusersbyname)
+* [onPostSession](_routes_users_.usersroute.md#onpostsession)
+* [onPostUsers](_routes_users_.usersroute.md#onpostusers)
+* [onPutSession](_routes_users_.usersroute.md#onputsession)
+* [onPutUsersById](_routes_users_.usersroute.md#onputusersbyid)
 
 ---
 
@@ -32,7 +38,7 @@ handles requests to /users
 
 ⊕ **new UsersRoute**(app: *`express.Express`*): [UsersRoute](_routes_users_.usersroute.md)
 
-*Defined in [routes/users.ts:8](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L8)*
+*Defined in [routes/users.ts:12](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L12)*
 
 **Parameters:**
 
@@ -46,15 +52,95 @@ ___
 
 ## Methods
 
+<a id="ondeletesession"></a>
+
+### `<Private>` onDeleteSession
+
+▸ **onDeleteSession**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:317](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L317)*
+
+called when a DELETE request to /users/session is done deletes an user's session returns 200 if logged out sucessfully returns 400 if the request is malformed returns 404 if the session wasn't found returns 500 if an internal error occured
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
+
+___
+<a id="ondeleteuserbyid"></a>
+
+### `<Private>` onDeleteUserById
+
+▸ **onDeleteUserById**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:173](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L173)*
+
+called when a DELETE request to /users/:userId is done deletes an user by its userId returns 200 if successful returns 400 if the request is malformed returns 404 if the user cannot be found returns 500 if an internal error occured
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
+
+___
+<a id="ongetping"></a>
+
+### `<Private>` onGetPing
+
+▸ **onGetPing**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:383](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L383)*
+
+called when a GET request to /ping is done tells the requester that we are alive returns 200
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
+
+___
+<a id="ongetsession"></a>
+
+### `<Private>` onGetSession
+
+▸ **onGetSession**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:209](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L209)*
+
+called when a GET request to /users/session is done gets an user session by its owning user's ID returns 200 if the session was found returns 400 if the request is malformed returns 404 if the session wasn't found returns 500 if an internal error occured
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
+
+___
 <a id="ongetusers"></a>
 
 ### `<Private>` onGetUsers
 
-▸ **onGetUsers**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
+▸ **onGetUsers**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
 
-*Defined in [routes/users.ts:32](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L32)*
+*Defined in [routes/users.ts:41](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L41)*
 
-called when a GET request to /users is done returns every users' id and name returns 200 if successful returns 400 if the request is malformed
+called when a GET request to /users is done returns every users' id and name returns 200 if successful returns 400 if the request is malformed returns 500 if an internal error occured
 
 **Parameters:**
 
@@ -62,20 +148,19 @@ called when a GET request to /users is done returns every users' id and name ret
 | ------ | ------ | ------ |
 | req | `express.Request` |  the request data |
 | res | `express.Response` |  the response data |
-| next | `express.NextFunction` |  the next request handler |
 
-**Returns:** `void`
+**Returns:** `Promise`<`void`>
 
 ___
-<a id="ongetusersuserid"></a>
+<a id="ongetusersbyid"></a>
 
-### `<Private>` onGetUsersUserId
+### `<Private>` onGetUsersById
 
-▸ **onGetUsersUserId**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
+▸ **onGetUsersById**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
 
-*Defined in [routes/users.ts:68](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L68)*
+*Defined in [routes/users.ts:102](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L102)*
 
-called when a GET request to /users/:userId is done returns an user's information returns 200 if successful returns 400 if the request is malformed returns 404 if the user cannot be found
+called when a GET request to /users/:userId is done returns an user's information returns 200 if successful returns 400 if the request is malformed returns 404 if the user cannot be found returns 500 if an internal error occured
 
 **Parameters:**
 
@@ -83,20 +168,19 @@ called when a GET request to /users/:userId is done returns an user's informatio
 | ------ | ------ | ------ |
 | req | `express.Request` |  the request data |
 | res | `express.Response` |  the response data |
-| next | `express.NextFunction` |  the next request handler |
 
-**Returns:** `void`
+**Returns:** `Promise`<`void`>
 
 ___
-<a id="onpostsignup"></a>
+<a id="ongetusersbyname"></a>
 
-### `<Private>` onPostSignup
+### `<Private>` onGetUsersByName
 
-▸ **onPostSignup**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
+▸ **onGetUsersByName**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
 
-*Defined in [routes/users.ts:110](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L110)*
+*Defined in [routes/users.ts:350](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L350)*
 
-called when a POST request to /users/signup is done creates a new user according to the sender's parameters returns 201 if the user was created returns 400 if the request is malformed returns 409 if the user already exists
+called when a GET request to /users/byname/:username is done returns an user's information by their username returns 200 if successful returns 400 if the request is malformed returns 404 if the user cannot be found returns 500 if an internal error occured
 
 **Parameters:**
 
@@ -104,20 +188,19 @@ called when a POST request to /users/signup is done creates a new user according
 | ------ | ------ | ------ |
 | req | `express.Request` |  the request data |
 | res | `express.Response` |  the response data |
-| next | `express.NextFunction` |  the next request handler |
 
-**Returns:** `void`
+**Returns:** `Promise`<`void`>
 
 ___
-<a id="onputlogin"></a>
+<a id="onpostsession"></a>
 
-### `<Private>` onPutLogin
+### `<Private>` onPostSession
 
-▸ **onPutLogin**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
+▸ **onPostSession**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
 
-*Defined in [routes/users.ts:146](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L146)*
+*Defined in [routes/users.ts:243](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L243)*
 
-called when a PUT request to /users/login is done logs in an user with the credentials the sender provided returns 200 if the login was sucessfull returns 400 if the request is malformed returns 401 if the credentials are invalid
+called when a POST request to /users/session is done creates a new user session with the user's credentials returns status 201 and the session if the session was created returns 400 if the request is malformed returns 401 if the credentials are invalid returns 409 if a session already exists returns 500 if an internal error occured
 
 **Parameters:**
 
@@ -125,20 +208,19 @@ called when a PUT request to /users/login is done logs in an user with the crede
 | ------ | ------ | ------ |
 | req | `express.Request` |  the request data |
 | res | `express.Response` |  the response data |
-| next | `express.NextFunction` |  the next request handler |
 
-**Returns:** `void`
+**Returns:** `Promise`<`void`>
 
 ___
-<a id="onputlogout"></a>
+<a id="onpostusers"></a>
 
-### `<Private>` onPutLogout
+### `<Private>` onPostUsers
 
-▸ **onPutLogout**(req: *`express.Request`*, res: *`express.Response`*, next: *`express.NextFunction`*): `void`
+▸ **onPostUsers**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
 
-*Defined in [routes/users.ts:182](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/routes/users.ts#L182)*
+*Defined in [routes/users.ts:65](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L65)*
 
-called when a PUT request to /users/logout is done logs in an user with the credentials the sender provided returns 200 if logged out sucessfully returns 400 if the request is malformed returns 404 if the user doesn't exist
+called when a POST request to /users is done creates a new user returns 201 if the user was created returns 400 if the request is malformed returns 409 if the user already exists returns 500 if an internal error occured
 
 **Parameters:**
 
@@ -146,9 +228,48 @@ called when a PUT request to /users/logout is done logs in an user with the cred
 | ------ | ------ | ------ |
 | req | `express.Request` |  the request data |
 | res | `express.Response` |  the response data |
-| next | `express.NextFunction` |  the next request handler |
 
-**Returns:** `void`
+**Returns:** `Promise`<`void`>
+
+___
+<a id="onputsession"></a>
+
+### `<Private>` onPutSession
+
+▸ **onPutSession**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:284](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L284)*
+
+called when a PUT request to /users/session is done updates an user's session data returns 200 if the session was updated returns 400 if the request is malformed returns 404 if the session wasn't found returns 500 if an internal error occured
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
+
+___
+<a id="onputusersbyid"></a>
+
+### `<Private>` onPutUsersById
+
+▸ **onPutUsersById**(req: *`express.Request`*, res: *`express.Response`*): `Promise`<`void`>
+
+*Defined in [routes/users.ts:138](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/routes/users.ts#L138)*
+
+called when a PUT request to /users/:userId is done updates an user's data returns 200 if the data was updated successfully returns 400 if the request is malformed returns 404 if the user wasn't found returns 500 if an internal error occured
+
+**Parameters:**
+
+| Name | Type | Description |
+| ------ | ------ | ------ |
+| req | `express.Request` |  the request data |
+| res | `express.Response` |  the response data |
+
+**Returns:** `Promise`<`void`>
 
 ___
 

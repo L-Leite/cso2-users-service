@@ -18,7 +18,7 @@
 
 ▸ **startService**(): `Promise`<`void`>
 
-*Defined in [service.ts:13](https://github.com/Ochii/cso2-users-service/blob/53e53f9/src/service.ts#L13)*
+*Defined in [service.ts:14](https://github.com/Ochii/cso2-users-service/blob/87c816a/src/service.ts#L14)*
 
 start a service instance
 
