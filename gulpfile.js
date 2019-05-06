@@ -1,12 +1,10 @@
 'use strict'
 
 var cached = require('gulp-cached')
-var childProcess = require('child_process');
 var del = require('delete')
 var gulp = require('gulp')
 var mocha = require('gulp-mocha')
-var nodemon = require('gulp-nodemon')
-var sourcemaps = require('gulp-sourcemaps');
+var sourcemaps = require('gulp-sourcemaps')
 var ts = require('gulp-typescript')
 var tslint = require('gulp-tslint')
 var typedoc = require('gulp-typedoc')
@@ -65,44 +63,10 @@ gulp.task('typescript', () => {
     .pipe(gulp.dest('dist'))
 })
 
-gulp.task('watch:dev', () => {
-  util.log('Watching app in development environment...')
-  util.log(process.version)
-  const stream = nodemon()
-    .on('restart', function () {
-      console.log('restarted!')
-    }).on('crash', function () {
-      console.error('Application has crashed!\n')
-      stream.emit('restart', 10) // restart the server in 10 seconds
-    })
-
-  return stream
-})
-
-gulp.task('watch:prod', () => {
-  util.log('Watching app in production environment...')
-  const stream = nodemon()
-    .on('restart', function () {
-      console.log('restarted!')
-    }).on('crash', function () {
-      console.error('Application has crashed!\n')
-      stream.emit('restart', 10) // restart the server in 10 seconds
-    })
-
-  return stream
-})
-
 gulp.task('build', gulp.series(
   'clean:dist',
   'tslint',
   'typescript'
-))
-
-gulp.task('run:dev', gulp.series(
-  'typescript',
-  () => {
-    childProcess.spawn('node', ['dist/service.js'], { stdio: 'pipe' });
-  }
 ))
 
 gulp.task('typedoc', gulp.series(
