@@ -1,0 +1,391 @@
+#%RAML 1.0
+title: CSO2 User Service
+description: The user's service API.
+version: 0.1.0
+
+types:
+  BaseUser:
+    description: An user's basic information.
+    properties:
+      userId: 
+        type: integer
+        description: The user's ID
+      username: 
+        type: string
+        description: The user's name
+      playername: 
+        type: string
+        description: The user's ingame name
+  User:
+    type: BaseUser
+    description: An user's full information.
+    properties:      
+      level:
+        type: integer
+        description: The user's level
+        minimum: 1
+        maximum: 255
+      currentXp:
+        type: integer
+        description: The user's current experience
+      maxXp:
+        type: integer
+        description: The user's level maximum experience
+      wins:
+        type: integer
+        description: The user's match wins
+      losses:
+        type: integer
+        description: The user's match losses
+      kills:
+        type: integer
+        description: The user's kills
+      deaths:
+        type: integer
+        description: The user's deaths
+      assists:
+        type: integer
+        description: The user's assists
+  SessionNetworkInfo:
+    description: An user's session network information
+    properties:
+      ipAddress:
+        type: string
+        description: The user's IP address
+      clientPort:
+        type: integer
+        description: The user's client port
+        minimum: 0
+        maximum: 65535
+      serverPort:
+        type: integer
+        description: The user's server port
+        minimum: 0
+        maximum: 65535
+      tvPort:
+        type: integer
+        description: The user's SourceTV port
+        minimum: 0
+        maximum: 65535
+  UserSession:
+    description: An user's session information
+    properties:
+      sessionId:
+        type: string
+        description: The session's unique ID
+      userId:
+        type: integer
+        description: The session owner's user ID
+      externalNet:
+        type: SessionNetworkInfo
+        description: The session owner's external network information
+      internalNet:
+        type: SessionNetworkInfo
+        description: The session owner's internal network information
+      currentChannelServerIndex:
+        type: integer
+        description: The channel server's index where the user's currently at
+      currentChannelIndex:
+        type: integer
+        description: The channel's index where the user's currently at
+      currentRoomId:
+        type: integer
+        description: The room's ID where the user's currently at
+
+/users:
+  description: The user's API base
+  get:
+    responses:
+      200:
+        description: The user's information.
+        body:
+          application/json:
+            type: BaseUser[]
+            description: Every users' basic information.
+            example:
+              - userId: 123
+                username: "gamer"
+                playername: "VeryGoodGamer"
+              - userId: 456
+                username: "ilovecso2"     
+                playername: "ReallyLikeCSO2"
+      500:
+          description: An internal error has occured.
+  post:
+    description: Request to create a new user
+    body:
+      application/json:   
+        properties:
+          username: 
+            type: string
+            description: The target user's name
+            example: "gamer"
+          playername: 
+            type: string
+            description: The target user's ingame name
+            example: "VeryGoodGamer"
+          password:
+            type: string
+            description: The target user's secret password
+            example: "123456"
+    responses:
+      201:
+        description: The user was created sucessfully.
+        body:
+          application/json:   
+            properties:
+              userId:
+                type: integer
+                description: The new user's ID.
+                example: 654321
+      400:
+        description: The request is malformed.
+      409:
+        description: The user name or player name are unavailable.
+      500:
+        description: An internal error has occured.  
+  /{userId}:
+    uriParameters:
+      userId:
+        type: integer
+        description: The user's ID number.  
+    get:
+      description: Request to get an user's information.      
+      responses:
+        200:
+          description: The user's information.
+          body:
+            application/json:
+              type: User
+              description: The requested user's information.
+              example:
+                userId: 123
+                username: "gamer"
+                playername: "VeryGoodGamer"
+                level: 25
+                currentXp: 32100
+                maxXp: 45000
+                wins: 230
+                losses: 215
+                kills: 1521
+                deaths: 1324
+                assists: 540
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+    put:
+      description: Update an user's session data.  
+      body:
+        application/json:
+          properties:
+            wins:
+              type: integer
+              description: The new 'wins' value
+              example: 16
+      responses:
+        200:
+          description: The user's session data.                  
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+    delete:
+      description: Delete an user. 
+      responses:
+        200:
+          description: The user was deleted sucessfully.
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.    
+        500:
+          description: An internal error has occured.
+  /byname/{username}:
+    uriParameters:
+      username:
+        type: string
+        description: The user's name.
+    get:
+      description: Request to get an user's information by their user name.
+      responses:
+        200:
+          description: The user's information.
+          body:
+            application/json:
+              type: User
+              description: The requested user's information.
+              example:
+                userId: 123
+                username: "gamer"
+                playername: "VeryGoodGamer"
+                level: 25
+                avatar: 1005
+                currentXp: 32100
+                maxXp: 45000
+                rank: 3
+                vipLevel: 4
+                wins: 230
+                losses: 215
+                kills: 1521
+                deaths: 1324
+                assists: 540
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+  /session:
+    get:
+      description: Request to get an user's session data.
+      body:
+        application/json:
+          properties:
+            userId: 
+              type: integer
+              description: The session owner's user ID
+              example: 123
+      responses:
+        200:
+          description: The user's session data.
+          body:
+            application/json:
+              type: UserSession
+              description: The requested user's session information.
+              example:
+                sessionId: "3a017fc5-4f50-4db9-b0ce-4547ba0a1bfd"
+                userId: 123
+                externalNet:
+                  ipAddress: "123.45.67.89"
+                  clientPort: 12345
+                  serverPort: 54321
+                  tvPort: 51234
+                internalNet:
+                  ipAddress: "192.168.0.100"
+                  clientPort: 12345
+                  serverPort: 54321
+                  tvPort: 51234
+                currentChannelServerIndex: 2
+                currentChannelIndex: 1
+                currentRoomId: 15
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.    
+    post:
+      description: Create a new user session.
+      body:
+        application/json:   
+          properties:
+            username:
+              type: string
+              description: The user's name.
+              example: "gamer"
+            password:
+              type: string
+              description: The user's password.
+              example: "123456"       
+      responses:
+        201:
+          description: The session was created sucessfully.
+          body:
+            application/json:
+              type: UserSession
+              description: The requested user's session information.
+              example:
+                sessionId: "3a017fc5-4f50-4db9-b0ce-4547ba0a1bfd"
+                userId: 123
+                externalNet:
+                  ipAddress: "123.45.67.89"
+                  clientPort: 12345
+                  serverPort: 54321
+                  tvPort: 51234
+                internalNet:
+                  ipAddress: "192.168.0.100"
+                  clientPort: 12345
+                  serverPort: 54321
+                  tvPort: 51234
+                currentChannelServerIndex: 2
+                currentChannelIndex: 1
+                currentRoomId: 15
+        400:
+          description: The request is malformed.
+        401:
+          description: The user's credentials are wrong.
+        409:
+          description: A session already exists.
+        500:
+          description: An internal error has occured.
+    put:
+      description: Update an user's session data.  
+      body:
+        application/json:
+          properties:
+            userId:
+              type: integer
+              description: The session owner's user ID
+              example: 123
+            currentChannelIndex:
+              type: integer
+              description: The channel's index where the user's currently at
+              example: 3
+            externalNet:
+              description: The session user's external network information
+              properties:
+                clientPort:
+                  type: integer
+                  description: The session user's external client port
+                  example: 12345     
+                  minimum: 0
+                  maximum: 65535
+      responses:
+        200:
+          description: The user's session data.
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+    delete:
+      description: Delete an user's session.
+      body:
+        application/json:   
+          properties:
+            userId:
+              type: integer
+              description: The session owner's user ID.
+              example: 123     
+      responses:
+        200:
+          description: The session was deleted sucessfully.
+        400:
+          description: The request is malformed.
+        404:
+          description: The session/user does not exist.
+        500:
+          description: An internal error has occured.
+/ping:
+  get:
+    description: Checks if a service is running.
+    body:
+      application/json:
+        properties:
+          sessions:
+            type: integer
+            description: The number of player sessions stored in the database
+            example: 3600
+          uptime:
+            type: integer
+            description: The number of seconds since the start of the service
+            example: 3600
+    responses:
+      200:
+        description: The service is up and running.

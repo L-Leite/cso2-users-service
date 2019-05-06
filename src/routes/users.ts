@@ -1,23 +1,32 @@
 import express from 'express'
 
+import { buildPasswordHash } from 'hash'
 import { LogInstance } from 'log/loginstance'
+
+import { ISetUserRequest as ISetUserBody, User } from 'entities/user'
+import { ISetSessionInfoBody, UserSession } from 'entities/usersession'
 
 /**
  * handles requests to /users
  */
 export class UsersRoute {
-
   constructor(app: express.Express) {
     app.route('/users')
       .get(this.onGetUsers)
+      .post(this.onPostUsers)
+    app.route('/users/session')
+      .get(this.onGetSession)
+      .post(this.onPostSession)
+      .put(this.onPutSession)
+      .delete(this.onDeleteSession)
     app.route('/users/:userId')
-      .get(this.onGetUsersUserId)
-    app.route('/users/signup')
-      .post(this.onPostSignup)
-    app.route('/users/login')
-      .put(this.onPutLogin)
-    app.route('/users/logout')
-      .put(this.onPutLogout)
+      .get(this.onGetUsersById)
+      .put(this.onPutUsersById)
+      .delete(this.onDeleteUserById)
+    app.route('/users/byname/:username')
+      .get(this.onGetUsersByName)
+    app.route('/ping')
+      .get(this.onGetPing)
   }
 
   /**
@@ -25,34 +34,59 @@ export class UsersRoute {
    * returns every users' id and name
    * returns 200 if successful
    * returns 400 if the request is malformed
+   * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
-   * @param next the next request handler
    */
-  private onGetUsers(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`GET request to /users`)
+  private async onGetUsers(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('GET request to /users')
 
-    // return bad request if there are parameters in the request
-    // TODO: is this needed?
-    if (Object.keys(req.query).length !== 0) {
+    try {
+      const users: User[] = await User.getAllUsers()
+
+      // return OK
+      return res.status(200).json(users).end()
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a POST request to /users is done
+   * creates a new user
+   * returns 201 if the user was created
+   * returns 400 if the request is malformed
+   * returns 409 if the user already exists
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onPostUsers(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('POST request to /users')
+
+    const userName: string = req.body.username
+    const playerName: string = req.body.playername
+    const password: string = req.body.password
+
+    if (userName == null
+      || playerName == null
+      || password == null) {
       return res.status(400).end()
     }
 
-    const sampleResponse = [
-      {
-        userId: 123,
-        username: 'gamer',
-        playername: 'VeryGoodGamer',
-      },
-      {
-        userId: 456,
-        username: 'ilovecso2',
-        playername: 'ReallyLikeCSO2',
-      },
-    ]
-
-    // return OK
-    res.status(200).json(sampleResponse)
+    try {
+      const hashedPassword: string = await buildPasswordHash(password)
+      const newUser: User = await User.createUser(userName, playerName, hashedPassword)
+      return res.status(201).json({ userId: newUser.userId }).end()
+    } catch (error) {
+      if (error === 409) {
+        res.status(409).end()
+      } else {
+        LogInstance.error(error)
+        return res.status(500).end()
+      }
+    }
   }
 
   /**
@@ -61,11 +95,11 @@ export class UsersRoute {
    * returns 200 if successful
    * returns 400 if the request is malformed
    * returns 404 if the user cannot be found
+   * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
-   * @param next the next request handler
    */
-  private onGetUsersUserId(req: express.Request, res: express.Response, next: express.NextFunction): void {
+  private async onGetUsersById(req: express.Request, res: express.Response): Promise<void> {
     const reqUserId: number = Number(req.params.userId)
 
     LogInstance.info(`GET request to /users/${reqUserId}`)
@@ -75,121 +109,283 @@ export class UsersRoute {
       return res.status(400).end()
     }
 
-    /*if (cant find user) {
-      return res.status(404).end()
-    }*/
+    try {
+      const user: User = await User.getUserById(reqUserId)
 
-    const sampleResponse = {
-      userId: reqUserId,
-      username: 'gamer',
-      playername: 'VeryGoodGamer',
-      level: 25,
-      currentXp: 32100,
-      maxXp: 45000,
-      wins: 230,
-      losses: 215,
-      kills: 1521,
-      deaths: 1324,
-      assists: 540,
+      // if the user isn't found
+      if (user == null) {
+        return res.status(404).end()
+      }
+
+      // return OK
+      return res.status(200).json(user).end()
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
     }
-
-    // return OK
-    res.status(200).json(sampleResponse)
   }
 
   /**
-   * called when a POST request to /users/signup is done
-   * creates a new user according to the sender's parameters
-   * returns 201 if the user was created
+   * called when a PUT request to /users/:userId is done
+   * updates an user's data
+   * returns 200 if the data was updated successfully
    * returns 400 if the request is malformed
-   * returns 409 if the user already exists
+   * returns 404 if the user wasn't found
+   * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
-   * @param next the next request handler
    */
-  private onPostSignup(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`POST request to /users/signup`)
+  private async onPutUsersById(req: express.Request, res: express.Response): Promise<void> {
+    const reqUserId: number = Number(req.params.userId)
 
-    const userName: string = req.body.username
-    const playerName: string = req.body.playername
-    const password: string = req.body.password
+    LogInstance.info(`PUT request to /users/${reqUserId}`)
 
-    // return bad request if the required body params arent present
-    if (userName == null
-      || playerName == null
-      || password == null) {
+    const reqUser: ISetUserBody = req.body
+
+    if (isNaN(reqUserId)) {
       return res.status(400).end()
     }
 
-    /*if (user already exists) {
-      return res.status(409).end()
-    }*/
+    try {
+      const wasUpdated: boolean = await User.set(reqUserId, reqUser)
 
-    const sampleResponse = {
-      userId: 654321,
+      if (wasUpdated) {
+        return res.status(200).end()
+      } else {
+        return res.status(404).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
     }
-
-    // return created
-    res.status(201).json(sampleResponse)
   }
 
   /**
-   * called when a PUT request to /users/login is done
-   * logs in an user with the credentials the sender provided
-   * returns 200 if the login was sucessfull
+   * called when a DELETE request to /users/:userId is done
+   * deletes an user by its userId
+   * returns 200 if successful
    * returns 400 if the request is malformed
-   * returns 401 if the credentials are invalid
+   * returns 404 if the user cannot be found
+   * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
-   * @param next the next request handler
    */
-  private onPutLogin(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`PUT request to /users/login`)
+  private async onDeleteUserById(req: express.Request, res: express.Response): Promise<void> {
+    const reqUserId: number = Number(req.params.userId)
 
-    const userName: string = req.body.username
-    const password: string = req.body.password
+    LogInstance.info(`DELETE request to /users/${reqUserId}`)
 
-    // return bad request if the required body params arent present
-    if (userName == null
-      || password == null) {
+    // return bad request if the userId isn't a number
+    if (isNaN(reqUserId)) {
       return res.status(400).end()
     }
 
-    /*if (wrong credentials) {
-      return res.status(401).end()
-    }*/
+    try {
+      const deleted: boolean = await User.removeUserById(reqUserId)
 
-    const sampleResponse = {
-      userId: 123,
-      username: userName,
-      playername: 'VeryGoodGamer',
+      if (deleted === true) {
+        // return OK
+        return res.status(200).end()
+      } else {
+        // if the user isn't found
+        return res.status(404).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
     }
-
-    // return OK
-    res.status(200).json(sampleResponse)
   }
 
   /**
-   * called when a PUT request to /users/logout is done
-   * logs in an user with the credentials the sender provided
-   * returns 200 if logged out sucessfully
+   * called when a GET request to /users/session is done
+   * gets an user session by its owning user's ID
+   * returns 200 if the session was found
    * returns 400 if the request is malformed
-   * returns 404 if the user doesn't exist
+   * returns 404 if the session wasn't found
+   * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
-   * @param next the next request handler
    */
-  private onPutLogout(req: express.Request, res: express.Response, next: express.NextFunction): void {
-    LogInstance.info(`PUT request to /users/login`)
+  private async onGetSession(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('GET request to /users/session')
 
     const userId: number = Number(req.body.userId)
 
-    // return bad request if the required body params arent present
-    if (isNaN(userId) === true) {
+    if (isNaN(userId)) {
       return res.status(400).end()
     }
 
-    // return OK
-    res.status(200).end()
+    try {
+      const session: UserSession = await UserSession.getByUserId(userId)
+
+      if (session !== null) {
+        return res.status(200).json(session).end()
+      } else {
+        return res.status(404).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a POST request to /users/session is done
+   * creates a new user session with the user's credentials
+   * returns status 201 and the session if the session was created
+   * returns 400 if the request is malformed
+   * returns 401 if the credentials are invalid
+   * returns 409 if a session already exists
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onPostSession(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('POST request to /users/session')
+
+    const userName: string = req.body.username
+    const password: string = req.body.password
+
+    if (userName == null
+      || password == null) {
+      return res.status(400).end()
+    }
+
+    try {
+      const loggedUserId: number = await User.validateCredentials(userName, password)
+
+      if (loggedUserId !== 0) {
+        // logged in successfully
+        const session: UserSession = await UserSession.create(loggedUserId)
+        return res.status(201).json(session).end()
+      } else {
+        return res.status(401).end()
+      }
+    } catch (error) {
+      if (error === 409) {
+        res.status(409).end()
+      } else {
+        LogInstance.error(error)
+        return res.status(500).end()
+      }
+    }
+  }
+
+  /**
+   * called when a PUT request to /users/session is done
+   * updates an user's session data
+   * returns 200 if the session was updated
+   * returns 400 if the request is malformed
+   * returns 404 if the session wasn't found
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onPutSession(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('PUT request to /users/session')
+
+    const reqSession: ISetSessionInfoBody = req.body
+
+    if (isNaN(reqSession.userId)) {
+      return res.status(400).end()
+    }
+
+    try {
+      const wasUpdated: boolean = await UserSession.set(reqSession.userId, reqSession)
+
+      if (wasUpdated) {
+        return res.status(200).end()
+      } else {
+        return res.status(404).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a DELETE request to /users/session is done
+   * deletes an user's session
+   * returns 200 if logged out sucessfully
+   * returns 400 if the request is malformed
+   * returns 404 if the session wasn't found
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onDeleteSession(req: express.Request, res: express.Response): Promise<void> {
+    LogInstance.info('PUT request to /users/session')
+
+    const userId: number = Number(req.body.userId)
+
+    if (isNaN(userId)) {
+      return res.status(400).end()
+    }
+
+    try {
+      const wasDeleted: boolean = await UserSession.deleteByUserId(userId)
+      if (wasDeleted) {
+        return res.status(200).end()
+      } else {
+        LogInstance.warn(`Tried to delete user's ${userId} session but failed.`)
+        return res.status(404).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a GET request to /users/byname/:username is done
+   * returns an user's information by their username
+   * returns 200 if successful
+   * returns 400 if the request is malformed
+   * returns 404 if the user cannot be found
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onGetUsersByName(req: express.Request, res: express.Response): Promise<void> {
+    const reqUsername: string = req.params.username
+
+    LogInstance.info(`GET request to /users/byname/${reqUsername}`)
+
+    // return bad request if the userId isn't a number
+    if (reqUsername == null) {
+      return res.status(400).end()
+    }
+
+    try {
+      const user: User = await User.getUserByName(reqUsername)
+
+      // if the user isn't found
+      if (user == null) {
+        return res.status(404).end()
+      }
+
+      // return OK
+      return res.status(200).json(user).end()
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a GET request to /ping is done
+   * tells the requester that we are alive
+   * returns 200
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onGetPing(req: express.Request, res: express.Response): Promise<void> {
+    const pingReply = {
+      sessions: await UserSession.count(),
+      uptime: process.uptime(),
+    }
+
+    return res.status(200).json(pingReply).end()
   }
 }

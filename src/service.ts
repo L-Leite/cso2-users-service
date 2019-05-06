@@ -5,6 +5,7 @@
 // add the src directory to the module search path
 import 'app-module-path/register'
 
+import { buildPasswordHash } from 'hash';
 import { ServiceInstance } from 'serviceinstance'
 
 /**

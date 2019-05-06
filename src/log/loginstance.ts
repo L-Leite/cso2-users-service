@@ -4,11 +4,17 @@ import winston from 'winston'
  * sets up and stores the winston logger
  */
 export class LogInstance {
+  /**
+   * log a debug type message
+   * @param message the message to log
+   */
+  public static debug(message: string): void {
+    LogInstance.logger.debug(message)
+  }
 
   /**
    * log a error type message
    * @param message the message to log
-   * @param optionalParams optional params to be formated into the message
    */
   public static error(message: string): void {
     LogInstance.logger.error(message)
@@ -17,7 +23,6 @@ export class LogInstance {
   /**
    * log a information type message
    * @param message the message to log
-   * @param optionalParams optional params to be formated into the message
    */
   public static info(message: string): void {
     LogInstance.logger.info(message)
@@ -26,7 +31,6 @@ export class LogInstance {
   /**
    * log a warning type message
    * @param message the message to log
-   * @param optionalParams optional params to be formated into the message
    */
   public static warn(message: string): void {
     LogInstance.logger.warn(message)
