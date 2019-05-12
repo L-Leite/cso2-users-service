@@ -1,7 +1,7 @@
 #%RAML 1.0
 title: CSO2 User Service
 description: The user's service API.
-version: 0.1.0
+version: 0.1.1
 
 types:
   BaseUser:
@@ -370,6 +370,14 @@ types:
           description: The request is malformed.
         404:
           description: The session/user does not exist.
+        500:
+          description: An internal error has occured.
+  /session/all:
+    delete:
+      description: Deletes every user session.  
+      responses:
+        200:
+          description: The sessions were deleted sucessfully.
         500:
           description: An internal error has occured.
 /ping:

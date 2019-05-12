@@ -119,6 +119,17 @@ export class UserSession extends typegoose.Typegoose {
         return res.ok === 1 && res.n === 1
     }
 
+    /**
+     * delete every session saved in the database
+     * @returns true if deleted successfully, false if not
+     */
+    public static async deleteAll(): Promise<boolean> {
+        const res: { ok?: number; } = await UserSessionModel.remove({})
+            .exec()
+
+        return res.ok === 1
+    }
+
     @typegoose.prop({ required: true })
     public sessionId: string
     @typegoose.prop({ min: 1, required: true })

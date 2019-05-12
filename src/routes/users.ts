@@ -14,6 +14,8 @@ export class UsersRoute {
     app.route('/users')
       .get(this.onGetUsers)
       .post(this.onPostUsers)
+    app.route('/users/session/all')
+      .delete(this.onDeleteAllSessions)
     app.route('/users/session')
       .get(this.onGetSession)
       .post(this.onPostSession)
@@ -46,6 +48,29 @@ export class UsersRoute {
 
       // return OK
       return res.status(200).json(users).end()
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a DELETE request to /users/sessions/all is done
+   * deletes all saved user sessions
+   * returns 200 if logged out sucessfully
+   * returns 404 if the session wasn't found
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onDeleteAllSessions(req: express.Request, res: express.Response): Promise<void> {
+    try {
+      const wasDeleted: boolean = await UserSession.deleteAll()
+      if (wasDeleted) {
+        return res.status(200).end()
+      } else {
+        return res.status(500).end()
+      }
     } catch (error) {
       LogInstance.error(error)
       return res.status(500).end()

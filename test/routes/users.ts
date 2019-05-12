@@ -1197,6 +1197,70 @@ mocha.describe('Users', (): void => {
         })
     })
 
+    mocha.describe('DELETE /users/session/all', (): void => {
+        let targetUser: number = 0
+        let targetUser2: number = 0
+
+        mocha.before((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/users')
+                .send({
+                    username: 'testuser',
+                    playername: 'TestingUser',
+                    password: '222222',
+                }).then((res: superagent.Response) => {
+                    targetUser = res.body.userId
+                    chai.request(serviceInstance.app)
+                        .post('/users/session')
+                        .send({
+                            username: 'testuser',
+                            password: '222222',
+                        })
+                        .then((res2: superagent.Response): void => {
+                            chai.request(serviceInstance.app)
+                                .post('/users')
+                                .send({
+                                    username: 'testuser2',
+                                    playername: 'Testing User Again',
+                                    password: '222222',
+                                }).then((res3: superagent.Response) => {
+                                    targetUser2 = res3.body.userId
+                                    chai.request(serviceInstance.app)
+                                        .post('/users/session')
+                                        .send({
+                                            username: 'testuser2',
+                                            password: '222222',
+                                        })
+                                        .then((res24: superagent.Response): void => {
+                                            return done()
+                                        })
+                                })
+                        })
+                })
+        })
+
+        mocha.it('Should delete an user\'s session', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .delete('/users/session/all')
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    return done()
+                })
+        })
+
+        mocha.after((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .delete('/users/' + targetUser)
+                .then(() => {
+                    chai.request(serviceInstance.app)
+                        .delete('/users/' + targetUser2)
+                        .then(() => {
+                            return done()
+                        })
+                })
+        })
+    })
+
     mocha.after((): void => {
         serviceInstance.stop()
     })
