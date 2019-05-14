@@ -1,8 +1,10 @@
 # cso2-users-service
 
-User service for a Nexon's Counter-Strike: Online 2 master server written in Typescript on top of NodeJS.
+[![Build Status](https://travis-ci.org/Ochii/cso2-inventusersory-service.svg?branch=master)](https://travis-ci.org/Ochii/cso2-users-service)
 
-You can find the ```docker-compose``` scripts used to run this in [cso2-master-services](https://github.com/Ochii/cso2-master-services).
+User service for a Nexon's Counter-Strike: Online 2 master server written in Typescript on top of Node.js.
+
+You can find download and build scripts in [cso2-master-services](https://github.com/Ochii/cso2-master-services#running-the-services).
 
 ## Building
 
@@ -45,11 +47,11 @@ export DB_NAME=cso2 # the database's name
 gulp test
 ```
 
-## Pull requests
+## Contributing
 
-Pull requests are very much welcome.
+Bug reports and pull requests are very much welcome.
 
-Please read the [contributing guide](https://github.com/Ochii/cso2-users-service/blob/master/.github/PULL_REQUEST_TEMPLATE.md) before contributing.
+See the [current project's progress](https://github.com/Ochii/cso2-master-services/projects/1) for more information.
 
 ## License
 
