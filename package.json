@@ -6,6 +6,9 @@
   "author": "Luís Leite",
   "license": "MIT",
   "main": "src/service.ts",
+  "scripts": {
+    "write-version": "cross-var \"echo $npm_package_version > version.txt\""
+  },
   "dependencies": {
     "app-module-path": "^2.2.0",
     "body-parser": "^1.19.0",
@@ -50,14 +53,12 @@
     "gulp-cached": "^1.1.1",
     "gulp-cli": "^2.2.0",
     "gulp-mocha": "^6.0.0",
-    "gulp-nodemon": "^2.4.2",
     "gulp-sourcemaps": "^2.6.5",
     "gulp-tslint": "^8.1.4",
     "gulp-typedoc": "^2.2.2",
     "gulp-typescript": "^5.0.1",
     "gulp-util": "^3.0.8",
     "mocha": "^6.1.4",
-    "nodemon": "^1.19.0",
     "ts-node": "^7.0.1",
     "tslint": "^5.16.0",
     "typedoc": "^0.14.2",
