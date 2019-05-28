@@ -41,8 +41,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onGetUsers(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('GET request to /users')
-
     try {
       const users: User[] = await User.getAllUsers()
 
@@ -88,8 +86,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onPostUsers(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('POST request to /users')
-
     const userName: string = req.body.username
     const playerName: string = req.body.playername
     const password: string = req.body.password
@@ -127,8 +123,6 @@ export class UsersRoute {
   private async onGetUsersById(req: express.Request, res: express.Response): Promise<void> {
     const reqUserId: number = Number(req.params.userId)
 
-    LogInstance.info(`GET request to /users/${reqUserId}`)
-
     // return bad request if the userId isn't a number
     if (isNaN(reqUserId)) {
       return res.status(400).end()
@@ -163,8 +157,6 @@ export class UsersRoute {
   private async onPutUsersById(req: express.Request, res: express.Response): Promise<void> {
     const reqUserId: number = Number(req.params.userId)
 
-    LogInstance.info(`PUT request to /users/${reqUserId}`)
-
     const reqUser: ISetUserBody = req.body
 
     if (isNaN(reqUserId)) {
@@ -198,8 +190,6 @@ export class UsersRoute {
   private async onDeleteUserById(req: express.Request, res: express.Response): Promise<void> {
     const reqUserId: number = Number(req.params.userId)
 
-    LogInstance.info(`DELETE request to /users/${reqUserId}`)
-
     // return bad request if the userId isn't a number
     if (isNaN(reqUserId)) {
       return res.status(400).end()
@@ -232,8 +222,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onGetSession(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('GET request to /users/session')
-
     const userId: number = Number(req.body.userId)
 
     if (isNaN(userId)) {
@@ -266,8 +254,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onPostSession(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('POST request to /users/session')
-
     const userName: string = req.body.username
     const password: string = req.body.password
 
@@ -307,8 +293,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onPutSession(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('PUT request to /users/session')
-
     const reqSession: ISetSessionInfoBody = req.body
 
     if (isNaN(reqSession.userId)) {
@@ -340,8 +324,6 @@ export class UsersRoute {
    * @param res the response data
    */
   private async onDeleteSession(req: express.Request, res: express.Response): Promise<void> {
-    LogInstance.info('PUT request to /users/session')
-
     const userId: number = Number(req.body.userId)
 
     if (isNaN(userId)) {
@@ -374,8 +356,6 @@ export class UsersRoute {
    */
   private async onGetUsersByName(req: express.Request, res: express.Response): Promise<void> {
     const reqUsername: string = req.params.username
-
-    LogInstance.info(`GET request to /users/byname/${reqUsername}`)
 
     // return bad request if the userId isn't a number
     if (reqUsername == null) {
