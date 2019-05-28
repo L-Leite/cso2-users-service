@@ -3,6 +3,9 @@ import pify from 'pify'
 
 export const HASH_PASSWORD_VERSION: number = 1
 
+const DEFAULT_HASH_ITERATIONS: number = 100000
+const DEFAULT_COMPONENT_COUNT: number = 4
+
 /**
  * hashes a password with PBKDF2
  * @param password the password to be hashed
@@ -15,38 +18,90 @@ async function generatePasswordHash(password: string, iterations: number, salt: 
 }
 
 /**
- * creates a string with the hash of a password and its salt
- * it has the string format version, salt, iterations and hash respectively, separated by colons
- * example: {version number}:{salt}:{iterations}:{hash}
- * @param password the password to be hashed
- * @returns a string with a string format version, salt, iterations and hash respectively
+ * stores and manages password hashes
  */
-export async function buildPasswordHash(password: string): Promise<string> {
-    const salt: string = crypto.randomBytes(16).toString('hex')
-    const iterations: number = 100000
+export class HashContainer {
+    /**
+     * creates a new composed hash from a password and returns a new container object
+     * @param password the password to be hashed
+     * @returns a new hash container object based on the input password
+     */
+    public static async create(password: string, iterations: number = DEFAULT_HASH_ITERATIONS,
+                               salt: string = null): Promise<HashContainer> {
+        if (salt == null) {
+            salt = crypto.randomBytes(16).toString('hex')
+        }
 
-    const derivedKey: Buffer = await generatePasswordHash(password, iterations, salt)
-    return HASH_PASSWORD_VERSION + ':' + salt + ':' + iterations + ':' + derivedKey.toString('hex')
-}
+        const hash: Buffer = await generatePasswordHash(password, iterations, salt)
 
-export async function comparePasswordHashes(password: string, targetHash: string): Promise<boolean> {
-    const parsedArray: string[] = targetHash.split(':')
-
-    if (parsedArray.length !== 4) {
-        throw new Error('The target\'s hash length ' + parsedArray.length + ' is invalid ')
+        return new HashContainer(salt, iterations, hash)
     }
 
-    const passwordVersion: number = Number(parsedArray[0])
+    /**
+     * parses a composed hash and returns a new hash container object
+     * @param composedHash the composed hash to be parsed
+     * @returns a new hash container object with the parsed composed hash
+     */
+    public static async from(composedHash: string): Promise<HashContainer> {
+        const hashComponents: string[] = composedHash.split(':')
 
-    if (passwordVersion !== HASH_PASSWORD_VERSION) {
-        throw new Error('The target\'s hash version ' + passwordVersion
-            + ' is different from ours ' + HASH_PASSWORD_VERSION)
+        if (hashComponents.length !== DEFAULT_COMPONENT_COUNT) {
+            throw new Error('The target\'s hash length ' + hashComponents.length + ' is invalid ')
+        }
+
+        const passwordVersion: number = Number(hashComponents[0])
+
+        if (passwordVersion !== HASH_PASSWORD_VERSION) {
+            throw new Error('The target\'s hash version ' + passwordVersion
+                + ' is different from ours ' + HASH_PASSWORD_VERSION)
+        }
+
+        const salt: string = hashComponents[1]
+        const iterations: number = Number(hashComponents[2])
+        const hash: Buffer = Buffer.from(hashComponents[3], 'hex')
+
+        return new HashContainer(salt, iterations, hash)
     }
 
-    const salt: string = parsedArray[1]
-    const iterations: number = Number(parsedArray[2])
-    const hash: Buffer = Buffer.from(parsedArray[3], 'hex')
+    private salt: string
+    private iterations: number
+    private hash: Buffer
 
-    const sourceHash: Buffer = await generatePasswordHash(password, iterations, salt)
-    return crypto.timingSafeEqual(sourceHash, hash)
+    protected constructor(salt: string, iterations: number, hash: Buffer) {
+        this.salt = salt
+        this.iterations = iterations
+        this.hash = hash
+    }
+
+    /**
+     * compare this hash container with another hash container
+     * @param right the other hash container to compare to
+     * @returns true if they're equal, false if not
+     */
+    public compare(right: HashContainer): boolean {
+        if (this.salt !== right.salt
+            || this.iterations !== right.iterations) {
+            return false
+        }
+
+        return crypto.timingSafeEqual(this.hash, right.hash)
+    }
+
+    /**
+     * clone a hash's container salt and iterations and use them to hash a different password
+     * @param password to be hashed
+     * @returns a new hash container object with the new hash and the cloned salt and iterations
+     */
+    public async cloneSettings(password: string): Promise<HashContainer> {
+        return await HashContainer.create(password, this.iterations, this.salt)
+    }
+
+    /**
+     * outputs the hash in the following format:
+     * {version number}:{salt}:{iterations}:{hash}
+     * @returns the combined hash
+     */
+    public build(): string {
+        return HASH_PASSWORD_VERSION + ':' + this.salt + ':' + this.iterations + ':' + this.hash.toString('hex')
+    }
 }

@@ -1,7 +1,8 @@
 import * as typegoose from 'typegoose'
 
 import { UserVars } from 'entities/uservars'
-import { comparePasswordHashes } from 'hash';
+
+import { HashContainer } from 'hash'
 
 export interface ISetUserRequest {
     password?: string
@@ -112,15 +113,18 @@ export class User extends typegoose.Typegoose {
         const user: User = await UserModel.findOne({ userName })
             .exec()
 
-        // TODO: do auth logic
-        // return the logged in user's ID if logged sucessfully
-        // or return null if the credentials are bad
-
-        if (user != null && await comparePasswordHashes(password, user.password)) {
-            return user.userId
-        } else {
+        if (user != null) {
             return 0
         }
+
+        const targetHash: HashContainer = await HashContainer.from(user.password)
+        const inputHash: HashContainer = await targetHash.cloneSettings(password)
+
+        if (targetHash.compare(inputHash) === false) {
+            return 0
+        }
+
+        return user.userId
     }
 
     @typegoose.prop({ index: true, required: true, unique: true })
