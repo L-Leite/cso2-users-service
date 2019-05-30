@@ -50,6 +50,18 @@ export class User extends typegoose.Typegoose {
     }
 
     /**
+     * is an user's name or ingame player name already taken?
+     * @param userName the target's user name
+     * @param playerName the target's ingame player name
+     * @returns true if so, false if not
+     */
+    public static async isUserTaken(userName: string, playerName: string): Promise<boolean> {
+        const target: User = await UserModel.findOne({ $or: [{ userName }, { playerName }] })
+            .exec()
+        return target != null
+    }
+
+    /**
      * set an user's information properties
      * @param userId the target user's ID
      * @param updatedUser the new user information properties
@@ -71,23 +83,24 @@ export class User extends typegoose.Typegoose {
      */
     public static async createUser(userName: string, playerName: string,
                                    password: string): Promise<User> {
-        // check if an user with the same username or playername already exists
-        const lookupUser: User = await UserModel.findOne({ $or: [{ userName }, { playerName }] })
-            .exec()
+        const [nextUserId, passwordHash]: [number, HashContainer] = await Promise.all([
+            UserVars.getNextUserId(),
+            HashContainer.create(password),
+        ])
 
-        if (lookupUser != null) {
-            throw 409
-        }
-
-        const nextUserId: number = await UserVars.getAndIncrementNextUserId()
-        const newUser = new UserModel({
+        const newUserReq = new UserModel({
             userId: nextUserId,
             userName,
             playerName,
-            password,
+            password: passwordHash.build(),
         })
 
-        return newUser.save()
+        const [newUser]: [User, boolean] = await Promise.all([
+            newUserReq.save(),
+            UserVars.setNextUserId(nextUserId + 1),
+        ])
+
+        return newUser
     }
 
     /**
@@ -113,7 +126,7 @@ export class User extends typegoose.Typegoose {
         const user: User = await UserModel.findOne({ userName })
             .exec()
 
-        if (user != null) {
+        if (user == null) {
             return 0
         }
 

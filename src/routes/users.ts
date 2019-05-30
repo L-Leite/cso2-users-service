@@ -1,6 +1,5 @@
 import express from 'express'
 
-import { buildPasswordHash } from 'hash'
 import { LogInstance } from 'log/loginstance'
 
 import { ISetUserRequest as ISetUserBody, User } from 'entities/user'
@@ -97,16 +96,19 @@ export class UsersRoute {
     }
 
     try {
-      const hashedPassword: string = await buildPasswordHash(password)
-      const newUser: User = await User.createUser(userName, playerName, hashedPassword)
+      const userExists: boolean = await User.isUserTaken(userName, playerName)
+
+      if (userExists === true) {
+        LogInstance.warn('Tried to create an existing user ' + userName + ' (' + playerName + ')')
+        return res.status(409).end()
+      }
+
+      const newUser: User = await User.createUser(userName, playerName, password)
+
       return res.status(201).json({ userId: newUser.userId }).end()
     } catch (error) {
-      if (error === 409) {
-        res.status(409).end()
-      } else {
-        LogInstance.error(error)
-        return res.status(500).end()
-      }
+      LogInstance.error(error)
+      return res.status(500).end()
     }
   }
 

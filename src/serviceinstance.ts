@@ -90,7 +90,7 @@ export class ServiceInstance {
       })
 
     // create global vars document
-    UserVars.setupDoc()
+    UserVars.initialize()
   }
 
   /**
