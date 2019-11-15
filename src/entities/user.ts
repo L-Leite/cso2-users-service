@@ -4,7 +4,7 @@ import { UserVars } from 'entities/uservars'
 
 import { HashContainer } from 'hash'
 
-export interface ISetUserRequest {
+export interface ISetUserInfoBody {
     password?: string
     level?: number
     curExp?: number
@@ -67,7 +67,7 @@ export class User extends typegoose.Typegoose {
      * @param updatedUser the new user information properties
      * @returns true if updated sucessfully, false if not
      */
-    public static async set(userId: number, updatedUser: ISetUserRequest): Promise<boolean> {
+    public static async set(userId: number, updatedUser: ISetUserInfoBody): Promise<boolean> {
         const res =
             await UserModel.updateOne({ userId }, { $set: updatedUser })
                 .exec()
