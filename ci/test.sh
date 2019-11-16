@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # setup service environment variables
 export NODE_ENV=production
 export USERS_PORT=30100

@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # setup env vars for the package file's name
 export GIT_COMMIT_HASH=$(git rev-parse --short=8 HEAD)
 export GIT_BRANCH=${APPVEYOR_PULL_REQUEST_HEAD_REPO_BRANCH:-$APPVEYOR_REPO_BRANCH}  
