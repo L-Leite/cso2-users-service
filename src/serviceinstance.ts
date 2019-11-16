@@ -86,7 +86,7 @@ export class ServiceInstance {
       process.env.DB_PORT, process.env.DB_NAME)
 
     // create a mongo connection
-    await mongoose.connect(dbUri, { useNewUrlParser: true })
+    await mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     LogInstance.info('Connected to ' + dbUri + ' db sucessfully')
 
     // create global vars document
