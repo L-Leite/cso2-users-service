@@ -39,3 +39,4 @@ deploy:
   artifact: service_build
   on:
     APPVEYOR_REPO_TAG: true
+    CURRENT_NODE_VERSION: 10
