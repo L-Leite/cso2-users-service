@@ -13,16 +13,16 @@ cache:
   - 'node_modules'
 
 install:
-  - sh: ./ci/setup.sh
+  - sh: source ./ci/setup.sh
 
 build_script:
-  - sh: ./ci/build.sh
+  - sh: source ./ci/build.sh
 
 after_build:
-  - sh: ./ci/pack.ps1
+  - sh: source ./ci/pack.ps1
 
 test_script:
-  - sh: ./ci/test.sh
+  - sh: source ./ci/test.sh
 
 artifacts:
 - path: cso2-users-service_*.tar.gz
@@ -36,7 +36,3 @@ deploy:
   artifact: service_build
   on:
     APPVEYOR_REPO_TAG: true
-
-on_finish:
-  - sh: export APPVEYOR_SSH_BLOCK=true
-  - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
