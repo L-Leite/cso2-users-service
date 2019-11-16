@@ -1,10 +1,10 @@
 # cso2-users-service
 
-[![Build Status](https://travis-ci.org/Ochii/cso2-inventusersory-service.svg?branch=master)](https://travis-ci.org/Ochii/cso2-users-service)
+[![Build status](https://ci.appveyor.com/api/projects/status/6slpqpr2igqfnwrh/branch/master?svg=true)](https://ci.appveyor.com/project/L-Leite/cso2-users-service/branch/master)
 
 User service for a Nexon's Counter-Strike: Online 2 master server written in Typescript on top of Node.js.
 
-You can find download and build scripts in [cso2-master-services](https://github.com/Ochii/cso2-master-services#running-the-services).
+You can find download and build scripts in [cso2-master-services](https://github.com/L-Leite/cso2-master-services#running-the-services).
 
 ## Building
 
