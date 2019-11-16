@@ -1,0 +1,25 @@
+#%RAML 1.0 DataType
+
+description: An user's session information
+properties:
+  sessionId:
+    type: string
+    description: The session's unique ID
+  userId:
+    type: integer
+    description: The session owner's user ID
+  externalNet:
+    type: !include SessionNetworkInfo.raml
+    description: The session owner's external network information
+  internalNet:
+    type: !include SessionNetworkInfo.raml
+    description: The session owner's internal network information
+  currentChannelServerIndex:
+    type: integer
+    description: The channel server's index where the user's currently at
+  currentChannelIndex:
+    type: integer
+    description: The channel's index where the user's currently at
+  currentRoomId:
+    type: integer
+    description: The room's ID where the user's currently at

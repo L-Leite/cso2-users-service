@@ -1,96 +1,12 @@
 #%RAML 1.0
-title: CSO2 User Service
+title: CSO2 Users Service
 description: The user's service API.
-version: 0.1.1
+version: 0.1.2
 
 types:
-  BaseUser:
-    description: An user's basic information.
-    properties:
-      userId: 
-        type: integer
-        description: The user's ID
-      username: 
-        type: string
-        description: The user's name
-      playername: 
-        type: string
-        description: The user's ingame name
-  User:
-    type: BaseUser
-    description: An user's full information.
-    properties:      
-      level:
-        type: integer
-        description: The user's level
-        minimum: 1
-        maximum: 255
-      currentXp:
-        type: integer
-        description: The user's current experience
-      maxXp:
-        type: integer
-        description: The user's level maximum experience
-      wins:
-        type: integer
-        description: The user's match wins
-      losses:
-        type: integer
-        description: The user's match losses
-      kills:
-        type: integer
-        description: The user's kills
-      deaths:
-        type: integer
-        description: The user's deaths
-      assists:
-        type: integer
-        description: The user's assists
-  SessionNetworkInfo:
-    description: An user's session network information
-    properties:
-      ipAddress:
-        type: string
-        description: The user's IP address
-      clientPort:
-        type: integer
-        description: The user's client port
-        minimum: 0
-        maximum: 65535
-      serverPort:
-        type: integer
-        description: The user's server port
-        minimum: 0
-        maximum: 65535
-      tvPort:
-        type: integer
-        description: The user's SourceTV port
-        minimum: 0
-        maximum: 65535
-  UserSession:
-    description: An user's session information
-    properties:
-      sessionId:
-        type: string
-        description: The session's unique ID
-      userId:
-        type: integer
-        description: The session owner's user ID
-      externalNet:
-        type: SessionNetworkInfo
-        description: The session owner's external network information
-      internalNet:
-        type: SessionNetworkInfo
-        description: The session owner's internal network information
-      currentChannelServerIndex:
-        type: integer
-        description: The channel server's index where the user's currently at
-      currentChannelIndex:
-        type: integer
-        description: The channel's index where the user's currently at
-      currentRoomId:
-        type: integer
-        description: The room's ID where the user's currently at
+  BaseUser: !include types/BaseUser.raml
+  User: !include types/User.raml
+  UserSession: !include types/UserSession.raml
 
 /users:
   description: The user's API base

@@ -1,0 +1,31 @@
+#%RAML 1.0 DataType
+
+type: !include BaseUser.raml
+description: An user's full information.
+properties:      
+  level:
+    type: integer
+    description: The user's level
+    minimum: 1
+    maximum: 255
+  currentXp:
+    type: integer
+    description: The user's current experience
+  maxXp:
+    type: integer
+    description: The user's level maximum experience
+  wins:
+    type: integer
+    description: The user's match wins
+  losses:
+    type: integer
+    description: The user's match losses
+  kills:
+    type: integer
+    description: The user's kills
+  deaths:
+    type: integer
+    description: The user's deaths
+  assists:
+    type: integer
+    description: The user's assists
