@@ -1,0 +1,2 @@
+# install dependencies
+npm ci

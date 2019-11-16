@@ -1,0 +1,38 @@
+version: 0.1.2-{build}
+
+image:
+  - Ubuntu1804
+
+environment:
+  matrix:
+    - stack: node, mongodb
+    - stack: node 12, mongodb
+    - stack: node 10, mongodb
+
+cache:
+  - 'node_modules'
+
+install:
+  - sh: ./ci/setup.sh
+
+build_script:
+  - sh: ./ci/build.sh
+
+after_build:
+  - sh: ./ci/pack.ps1
+
+test_script:
+  - sh: ./ci/test.sh
+
+artifacts:
+- path: cso2-users-service_*.tar.gz
+  name: service_build
+
+deploy:
+- provider: GitHub
+  release: Version $(SERVICE_VERSION)
+  auth_token:
+    secure: XnUsE3jqzulQ4cWVkK2ALBR7qfnfwbBdoMDChmcnx1RcGtRgXV0QLMPo+GcIf8YU
+  artifact: service_build
+  on:
+    APPVEYOR_REPO_TAG: true
