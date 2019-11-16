@@ -5,7 +5,7 @@ image:
 
 environment:
   matrix:
-    - stack: node, mongodb
+    - stack: node 13, mongodb
     - stack: node 12, mongodb
     - stack: node 10, mongodb
 
