@@ -19,7 +19,7 @@ export interface ISetUserInfoBody {
 /**
  * represents an user and its data
  */
-export class User extends typegoose.Typegoose {
+export class User {
     /**
      * retrieve every user in the db
      * @returns a promise with the users

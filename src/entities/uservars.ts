@@ -5,7 +5,7 @@ const DEFAULT_NEXTUSERID_VALUE: number = 1
 /**
  * a document that stores global user variables
  */
-export class UserVars extends typegoose.Typegoose {
+export class UserVars {
     /**
      * setup the uservars table
      */

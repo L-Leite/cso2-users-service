@@ -32,7 +32,7 @@ export interface ISetSessionInfoBody {
  * Handles an user's session information
  */
 @typegoose.index({ sessionId: 1, userId: 1 }, { unique: true })
-export class UserSession extends typegoose.Typegoose {
+export class UserSession {
     /**
      * retrieve an user's session by its session ID
      * @param sessionId the target session's ID
