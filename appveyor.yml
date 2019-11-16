@@ -19,7 +19,7 @@ build_script:
   - sh: source ./ci/build.sh
 
 after_build:
-  - sh: source ./ci/pack.ps1
+  - sh: source ./ci/pack.sh
 
 test_script:
   - sh: source ./ci/test.sh
