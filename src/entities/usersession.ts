@@ -1,4 +1,4 @@
-import * as typegoose from 'typegoose'
+import * as typegoose from '@typegoose/typegoose'
 import uuid from 'uuid/v4'
 
 import { SessionNetworkInfo } from 'entities/sessionnetworkinfo'
@@ -174,4 +174,4 @@ export class UserSession extends typegoose.Typegoose {
     }
 }
 
-const UserSessionModel = new UserSession().getModelForClass(UserSession)
+const UserSessionModel = typegoose.getModelForClass(UserSession)

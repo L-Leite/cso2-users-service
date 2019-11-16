@@ -1,4 +1,4 @@
-import * as typegoose from 'typegoose'
+import * as typegoose from '@typegoose/typegoose'
 
 const DEFAULT_NEXTUSERID_VALUE: number = 1
 
@@ -60,4 +60,4 @@ export class UserVars extends typegoose.Typegoose {
     public nextUserId?: number
 }
 
-const UserVarsModel = new UserVars().getModelForClass(UserVars)
+const UserVarsModel = typegoose.getModelForClass(UserVars)

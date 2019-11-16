@@ -1,4 +1,4 @@
-import * as typegoose from 'typegoose'
+import * as typegoose from '@typegoose/typegoose'
 
 import { UserVars } from 'entities/uservars'
 
@@ -172,4 +172,4 @@ export class User extends typegoose.Typegoose {
     public assists: number
 }
 
-const UserModel = new User().getModelForClass(User)
+const UserModel = typegoose.getModelForClass(User)
