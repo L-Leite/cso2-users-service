@@ -124,7 +124,7 @@ export class UserSession {
      * @returns true if deleted successfully, false if not
      */
     public static async deleteAll(): Promise<boolean> {
-        const res: { ok?: number; } = await UserSessionModel.remove({})
+        const res: { ok?: number; } = await UserSessionModel.deleteMany({})
             .exec()
 
         return res.ok === 1
