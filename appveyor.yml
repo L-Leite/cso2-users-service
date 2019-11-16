@@ -5,9 +5,12 @@ image:
 
 environment:
   matrix:
-    - stack: node 13, mongodb
-    - stack: node 12, mongodb
-    - stack: node 10, mongodb
+    - CURRENT_NODE_VERSION: 13
+    - CURRENT_NODE_VERSION: 12
+    - CURRENT_NODE_VERSION: 10
+
+services:
+  - mongodb
 
 cache:
   - 'node_modules'
