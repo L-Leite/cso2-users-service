@@ -1,31 +1,50 @@
 #%RAML 1.0 DataType
 
-type: !include BaseUser.raml
 description: An user's full information.
 properties:      
+  userId: 
+    type: integer
+    description: The user's ID
+    example: 123
+  username: 
+    type: string
+    description: The user's name
+    example: "gamer_x"
+  playername: 
+    type: string
+    description: The user's ingame name
+    example: "Gamer X"
   level:
     type: integer
     description: The user's level
     minimum: 1
     maximum: 255
+    example: 13
   currentXp:
     type: integer
     description: The user's current experience
+    example: 3500
   maxXp:
     type: integer
     description: The user's level maximum experience
+    example: 5000
   wins:
     type: integer
     description: The user's match wins
+    example: 5
   losses:
     type: integer
     description: The user's match losses
+    example: 10
   kills:
     type: integer
     description: The user's kills
+    example: 1
   deaths:
     type: integer
     description: The user's deaths
+    example: 230
   assists:
     type: integer
     description: The user's assists
+    example: 7

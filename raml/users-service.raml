@@ -1,0 +1,105 @@
+#%RAML 1.0
+title: CSO2 Users Service
+description: The user's service API.
+version: 0.2.0
+
+types:
+  User: !include types/User.raml
+  Session: !include types/Session.raml
+  NewUserRequest: !include types/NewUserRequest.raml
+  NewSessionRequest: !include types/NewSessionRequest.raml
+
+resourceTypes:
+  collection: !include resourceTypes/collection.raml
+  item: !include resourceTypes/item.raml
+
+traits:
+  paged: !include traits/paged.raml
+
+/users:
+  description: Endpoint for requests about Users
+  type:
+    collection:
+      collectionItemTypeName: User
+      collectionCreateType: NewUserRequest
+  get:
+    is:
+      - paged:
+          maxPages: 100
+  /{userId}:
+    uriParameters:
+      userId:
+        type: integer
+        description: The user's ID number.
+    type:
+      item:
+        itemTypeName: User
+        itemUniqueIdName: userId
+        itemUniqueIdType: integer
+        itemPutReqDataName: currentChannelIndex
+        itemPutReqDataType: integer
+        itemPutReqDataDesc: The new channel index where the user's currently at.
+        itemPutReqDataExample: 3
+  /byname/{username}:
+    uriParameters:
+      username:
+        type: string
+        description: The user's name.
+    get:
+      description: Request to get an user's information by their user name.
+      responses:
+        200:
+          description: The user's information.
+          body:
+            application/json:
+              type: User
+              description: The requested user's information.
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+/sessions:
+  type:
+    collection:
+      collectionItemTypeName: Session
+      collectionCreateType: NewSessionRequest
+  get:
+    is:
+      - paged:
+          maxPages: 25
+  /{ownerId}:
+    uriParameters:
+      ownerId:
+        type: integer
+        description: The session owner's user ID.
+        example: 38
+    type:
+      item:
+        itemTypeName: Session
+        itemUniqueIdName: ownerId
+        itemUniqueIdType: integer
+        itemPutReqDataName: currentChannelIndex
+        itemPutReqDataType: integer
+        itemPutReqDataDesc: The new channel's index where the user's currently at
+        itemPutReqDataExample: 3
+/ping:
+  get:
+    description: Checks if a service is running.
+    body:
+      application/json:
+        properties:
+          sessions:
+            type: integer
+            description: The number of player sessions stored in the database
+            example: 3600
+          uptime:
+            type: integer
+            description: The number of seconds since the start of the service
+            example: 3600
+    responses:
+      200:
+        description: The service is up and running.
+      500:
+        description: An internal error has occured.
