@@ -25,7 +25,12 @@ traits:
   get:
     is:
       - paged:
-          maxPages: 100
+          maxItems: 100
+    responses:
+      400:
+        description: The request is malformed.
+      413:
+        description: The requested number of users is too large.
   /{userId}:
     uriParameters:
       userId:
@@ -68,7 +73,12 @@ traits:
   get:
     is:
       - paged:
-          maxPages: 25
+          maxItems: 25
+    responses:
+      400:
+        description: The request is malformed.
+      413:
+        description: The requested number of sessions is too large.
   /{ownerId}:
     uriParameters:
       ownerId:
