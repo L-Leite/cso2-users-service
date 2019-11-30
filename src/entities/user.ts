@@ -4,28 +4,18 @@ import { UserVars } from 'entities/uservars'
 
 import { HashContainer } from 'hash'
 
-export interface ISetUserInfoBody {
-    password?: string
-    level?: number
-    curExp?: number
-    maxExp?: number
-    wins?: number
-    losses?: number
-    kills?: number
-    deaths?: number
-    assists?: number
-}
-
 /**
  * represents an user and its data
  */
 export class User {
     /**
      * retrieve every user in the db
+     * @param colOffset the index where the collection should begin
+     * @param colLength the collection's length
      * @returns a promise with the users
      */
-    public static async getAllUsers(): Promise<User[]> {
-        return UserModel.find({})
+    public static async getAllUsers(colOffset: number, colLength: number): Promise<User[]> {
+        return UserModel.find({}).skip(colOffset).limit(colLength)
             .exec()
     }
 
@@ -55,7 +45,7 @@ export class User {
      * @param playerName the target's ingame player name
      * @returns true if so, false if not
      */
-    public static async isUserTaken(userName: string, playerName: string): Promise<boolean> {
+    public static async isTaken(userName: string, playerName: string): Promise<boolean> {
         const target: User = await UserModel.findOne({ $or: [{ userName }, { playerName }] })
             .exec()
         return target != null
@@ -67,7 +57,7 @@ export class User {
      * @param updatedUser the new user information properties
      * @returns true if updated sucessfully, false if not
      */
-    public static async set(userId: number, updatedUser: ISetUserInfoBody): Promise<boolean> {
+    public static async set(userId: number, updatedUser: any): Promise<boolean> {
         const res =
             await UserModel.updateOne({ userId }, { $set: updatedUser })
                 .exec()

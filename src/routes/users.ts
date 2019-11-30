@@ -1,8 +1,7 @@
 import express from 'express'
 
+import { User } from 'entities/user'
 import { LogInstance } from 'log/loginstance'
-
-import { ISetUserInfoBody, User } from 'entities/user'
 
 /**
  * handles requests to /users
@@ -10,7 +9,7 @@ import { ISetUserInfoBody, User } from 'entities/user'
 export class UsersRoute {
   constructor(app: express.Express) {
     app.route('/users')
-      .get(this.onGetUsers)
+      .get(this.onGetAllUsers)
       .post(this.onPostUsers)
     app.route('/users/:userId')
       .get(this.onGetUsersById)
@@ -22,16 +21,31 @@ export class UsersRoute {
 
   /**
    * called when a GET request to /users is done
-   * returns every users' id and name
+   * returns every user by page
    * returns 200 if successful
    * returns 400 if the request is malformed
+   * returns 413 if the requested page is too large
    * returns 500 if an internal error occured
    * @param req the request data
    * @param res the response data
    */
-  private async onGetUsers(req: express.Request, res: express.Response): Promise<void> {
+  private async onGetAllUsers(req: express.Request, res: express.Response): Promise<void> {
+    const colOffset: number = Number(req.query.offset)
+    const colLength: number = Number(req.query.length)
+
+    if (isNaN(colOffset) === true
+      || isNaN(colLength) === true) {
+      return res.status(400).end()
+    }
+
+    const MAX_COLUMN_LENGTH: number = 100
+
+    if (colLength > MAX_COLUMN_LENGTH) {
+      return res.status(413).end()
+    }
+
     try {
-      const users: User[] = await User.getAllUsers()
+      const users: User[] = await User.getAllUsers(colOffset, colLength)
 
       // return OK
       return res.status(200).json(users).end()
@@ -44,7 +58,7 @@ export class UsersRoute {
   /**
    * called when a POST request to /users is done
    * creates a new user
-   * returns 201 if the user was created
+   * returns 201 if the user was created with the new user data
    * returns 400 if the request is malformed
    * returns 409 if the user already exists
    * returns 500 if an internal error occured
@@ -63,7 +77,7 @@ export class UsersRoute {
     }
 
     try {
-      const userExists: boolean = await User.isUserTaken(userName, playerName)
+      const userExists: boolean = await User.isTaken(userName, playerName)
 
       if (userExists === true) {
         LogInstance.warn('Tried to create an existing user ' + userName + ' (' + playerName + ')')
@@ -72,7 +86,7 @@ export class UsersRoute {
 
       const newUser: User = await User.createUser(userName, playerName, password)
 
-      return res.status(201).json({ userId: newUser.userId }).end()
+      return res.status(201).json(newUser).end()
     } catch (error) {
       LogInstance.error(error)
       return res.status(500).end()
@@ -126,14 +140,13 @@ export class UsersRoute {
   private async onPutUsersById(req: express.Request, res: express.Response): Promise<void> {
     const reqUserId: number = Number(req.params.userId)
 
-    const reqUser: ISetUserInfoBody = req.body
-
-    if (isNaN(reqUserId)) {
+    if (isNaN(reqUserId)
+      || req.body == null) {
       return res.status(400).end()
     }
 
     try {
-      const wasUpdated: boolean = await User.set(reqUserId, reqUser)
+      const wasUpdated: boolean = await User.set(reqUserId, req.body)
 
       if (wasUpdated) {
         return res.status(200).end()

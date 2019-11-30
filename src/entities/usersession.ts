@@ -3,43 +3,19 @@ import uuid from 'uuid/v4'
 
 import { SessionNetworkInfo } from 'entities/sessionnetworkinfo'
 
-enum HolepunchType {
-    Client = 0,
-    Server = 256,
-    SourceTV = 512,
-}
-
-export interface ISetSessionInfoBody {
-    userId: number
-    externalNet?: {
-        ipAddress?: string
-        clientPort?: number
-        serverPort?: number
-        tvPort?: number,
-    }
-    internalNet?: {
-        ipAddress?: string
-        clientPort?: number
-        serverPort?: number
-        tvPort?: number,
-    }
-    currentChannelServerIndex?: number
-    currentChannelIndex?: number
-    currentRoomId?: number
-}
-
 /**
  * Handles an user's session information
  */
 @typegoose.index({ sessionId: 1, userId: 1 }, { unique: true })
 export class UserSession {
     /**
-     * retrieve an user's session by its session ID
-     * @param sessionId the target session's ID
-     * @returns the requested UserSession, if found. otherwise it will return a null object
+     * retrieve every session in the db
+     * @param colOffset the index where the collection should begin
+     * @param colLength the collection's length
+     * @returns a promise with the sessions
      */
-    public static async get(sessionId: string): Promise<UserSession> {
-        return UserSessionModel.findOne({ sessionId })
+    public static async getAll(colOffset: number, colLength: number): Promise<UserSession[]> {
+        return UserSessionModel.find({}).skip(colOffset).limit(colLength)
             .exec()
     }
 
@@ -59,7 +35,7 @@ export class UserSession {
      * @param updatedSession the new session information properties
      * @returns true if updated sucessfully, false if not
      */
-    public static async set(userId: number, updatedSession: ISetSessionInfoBody): Promise<boolean> {
+    public static async set(userId: number, updatedSession: any): Promise<boolean> {
         const res =
             await UserSessionModel.updateOne({ userId }, { $set: updatedSession })
                 .exec()
@@ -147,31 +123,6 @@ export class UserSession {
 
     @typegoose.prop({ default: 0, required: true })
     public currentRoomId: number
-
-    public setCurrentChannelIndex(channelServerIndex: number, channelIndex: number): void {
-        this.currentChannelServerIndex = channelServerIndex
-        this.currentChannelIndex = channelIndex
-    }
-
-    public updateHolepunch(portId: number, localPort: number,
-                           externalPort: number): number {
-        switch (portId) {
-            case HolepunchType.Client:
-                this.internalNet.clientPort = localPort
-                this.externalNet.clientPort = externalPort
-                return 0
-            case HolepunchType.Server:
-                this.internalNet.serverPort = localPort
-                this.externalNet.serverPort = externalPort
-                return 1
-            case HolepunchType.SourceTV:
-                this.internalNet.tvPort = localPort
-                this.externalNet.tvPort = externalPort
-                return 2
-            default:
-                return -1
-        }
-    }
 }
 
 const UserSessionModel = typegoose.getModelForClass(UserSession)
