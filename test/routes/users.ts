@@ -39,11 +39,72 @@ mocha.describe('Users', (): void => {
                     res.should.be.status(201)
                     res.body.should.be.jsonSchema({
                         type: 'object',
-                        required: ['userId'],
+                        required: ['userId',
+                            'userName',
+                            'playerName',
+                            'level',
+                            'avatar',
+                            'curExp',
+                            'maxExp',
+                            'rank',
+                            'vipLevel',
+                            'wins',
+                            'losses',
+                            'kills',
+                            'deaths',
+                            'assists'],
                         properties: {
                             userId: {
                                 type: 'number',
                                 minimum: 1,
+                            },
+                            userName: {
+                                type: 'string',
+                            },
+                            playerName: {
+                                type: 'string',
+                            },
+                            level: {
+                                type: 'number',
+                                minimum: 1,
+                                maximum: 255, // TODO: what's the max?
+                            },
+                            avatar: {
+                                type: 'number',
+                            },
+                            curExp: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            maxExp: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            rank: {
+                                type: 'number',
+                            },
+                            vipLevel: {
+                                type: 'number',
+                            },
+                            wins: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            losses: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            kills: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            deaths: {
+                                type: 'number',
+                                minimum: 0,
+                            },
+                            assists: {
+                                type: 'number',
+                                minimum: 0,
                             },
                         },
                     })
@@ -118,13 +179,31 @@ mocha.describe('Users', (): void => {
         mocha.it('Should get every user', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
                 .get('/users')
+                .query({
+                    offset: 0,
+                    length: 50,
+                })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
                     res.body.should.be.jsonSchema({
                         type: 'array',
+                        minItems: 2,
                         items: {
                             type: 'object',
-                            required: ['userId', 'userName', 'playerName'],
+                            required: ['userId',
+                                'userName',
+                                'playerName',
+                                'level',
+                                'avatar',
+                                'curExp',
+                                'maxExp',
+                                'rank',
+                                'vipLevel',
+                                'wins',
+                                'losses',
+                                'kills',
+                                'deaths',
+                                'assists'],
                             properties: {
                                 userId: {
                                     type: 'number',
@@ -136,9 +215,251 @@ mocha.describe('Users', (): void => {
                                 playerName: {
                                     type: 'string',
                                 },
+                                level: {
+                                    type: 'number',
+                                    minimum: 1,
+                                    maximum: 255, // TODO: what's the max?
+                                },
+                                avatar: {
+                                    type: 'number',
+                                },
+                                curExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                maxExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                rank: {
+                                    type: 'number',
+                                },
+                                vipLevel: {
+                                    type: 'number',
+                                },
+                                wins: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                losses: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                kills: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                deaths: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                assists: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
                             },
                         },
                     })
+                    return done()
+                })
+        })
+
+        mocha.it('Should get the first user', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .get('/users')
+                .query({
+                    offset: 0,
+                    length: 1,
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    res.body.should.be.jsonSchema({
+                        type: 'array',
+                        minItems: 1,
+                        maxItems: 1,
+                        items: {
+                            type: 'object',
+                            required: ['userId',
+                                'userName',
+                                'playerName',
+                                'level',
+                                'avatar',
+                                'curExp',
+                                'maxExp',
+                                'rank',
+                                'vipLevel',
+                                'wins',
+                                'losses',
+                                'kills',
+                                'deaths',
+                                'assists'],
+                            properties: {
+                                userId: {
+                                    type: 'number',
+                                    minimum: 1,
+                                },
+                                userName: {
+                                    type: 'string',
+                                },
+                                playerName: {
+                                    type: 'string',
+                                },
+                                level: {
+                                    type: 'number',
+                                    minimum: 1,
+                                    maximum: 255, // TODO: what's the max?
+                                },
+                                avatar: {
+                                    type: 'number',
+                                },
+                                curExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                maxExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                rank: {
+                                    type: 'number',
+                                },
+                                vipLevel: {
+                                    type: 'number',
+                                },
+                                wins: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                losses: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                kills: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                deaths: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                assists: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                            },
+                        },
+                    })
+                    return done()
+                })
+        })
+
+        mocha.it('Should get the second user', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .get('/users')
+                .query({
+                    offset: 1,
+                    length: 1,
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    res.body.should.be.jsonSchema({
+                        type: 'array',
+                        minItems: 1,
+                        maxItems: 1,
+                        items: {
+                            type: 'object',
+                            required: ['userId',
+                                'userName',
+                                'playerName',
+                                'level',
+                                'avatar',
+                                'curExp',
+                                'maxExp',
+                                'rank',
+                                'vipLevel',
+                                'wins',
+                                'losses',
+                                'kills',
+                                'deaths',
+                                'assists'],
+                            properties: {
+                                userId: {
+                                    type: 'number',
+                                    minimum: 1,
+                                },
+                                userName: {
+                                    type: 'string',
+                                },
+                                playerName: {
+                                    type: 'string',
+                                },
+                                level: {
+                                    type: 'number',
+                                    minimum: 1,
+                                    maximum: 255, // TODO: what's the max?
+                                },
+                                avatar: {
+                                    type: 'number',
+                                },
+                                curExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                maxExp: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                rank: {
+                                    type: 'number',
+                                },
+                                vipLevel: {
+                                    type: 'number',
+                                },
+                                wins: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                losses: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                kills: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                deaths: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                                assists: {
+                                    type: 'number',
+                                    minimum: 0,
+                                },
+                            },
+                        },
+                    })
+                    return done()
+                })
+        })
+
+        mocha.it('Should 400 when getting an user page without query params', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .get('/users')
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(400)
+                    return done()
+                })
+        })
+
+        mocha.it('Should 413 when requesting for an oversized users page', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .get('/users')
+                .query({
+                    offset: 0,
+                    length: 101,
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(413)
                     return done()
                 })
         })
@@ -254,6 +575,7 @@ mocha.describe('Users', (): void => {
                     return done()
                 })
         })
+
         mocha.it('Should 400 when getting an user with a string as user ID', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
                 .get('/users/bad')
@@ -262,6 +584,7 @@ mocha.describe('Users', (): void => {
                     return done()
                 })
         })
+
         mocha.it('Should 404 when getting a non existing user', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
                 .get('/users/404')

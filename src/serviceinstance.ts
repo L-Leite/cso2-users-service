@@ -11,8 +11,8 @@ import { MorganToWinstonStream } from 'log/morgan2winston'
 import { UserVars } from 'entities/uservars'
 
 import { PingRoute } from 'routes/ping'
+import { SessionsRoute } from 'routes/sessions'
 import { UsersRoute } from 'routes/users'
-import { UsersSessionRoute } from 'routes/usersessions'
 
 function formatMongoUri(host: string, port: string, dbName: string) {
   return 'mongodb://' + host + ':' + port + '/' + dbName
@@ -117,7 +117,7 @@ export class ServiceInstance {
    * setup the service's API routes
    */
   private setupRoutes(): void {
-    const usersSessions: UsersSessionRoute = new UsersSessionRoute(this.app)
+    const sessions: SessionsRoute = new SessionsRoute(this.app)
     const users: UsersRoute = new UsersRoute(this.app)
     const ping: PingRoute = new PingRoute(this.app)
   }
