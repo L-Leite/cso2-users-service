@@ -10,6 +10,10 @@ get:
       body:
         application/json:
           type: <<collectionItemTypeName>>[]
+    400:
+      description: The request is malformed.
+    413:
+      description: The requested number of <<collectionItemTypeName | pluralize>> is too large.
     500:
       description: An internal error has occured.
 post:
@@ -27,7 +31,7 @@ post:
     400:
       description: The request is malformed.
     409:
-      description: The <<collectionCreateType>> is unavailable.
+      description: The <<collectionItemTypeName>> is unavailable.
     500:
       description: An internal error has occured.
 delete:
@@ -35,5 +39,7 @@ delete:
   responses:
     200:
       description: The <<collectionItemTypeName | !pluralize>> were deleted sucessfully.
+    400:
+      description: The request is malformed.
     500:
       description: An internal error has occured.

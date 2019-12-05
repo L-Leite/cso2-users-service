@@ -26,11 +26,6 @@ traits:
     is:
       - paged:
           maxItems: 100
-    responses:
-      400:
-        description: The request is malformed.
-      413:
-        description: The requested number of users is too large.
   /{userId}:
     uriParameters:
       userId:
