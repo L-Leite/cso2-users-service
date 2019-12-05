@@ -10,6 +10,8 @@ addPath(__dirname + '/../../src')
 
 import { ServiceInstance } from 'serviceinstance'
 
+import { USER_MAX_LEVEL } from 'entities/user'
+
 // setup chai
 chai.should()
 chai.use(chaiHttp)
@@ -67,7 +69,7 @@ mocha.describe('Users', (): void => {
                             level: {
                                 type: 'number',
                                 minimum: 1,
-                                maximum: 255, // TODO: what's the max?
+                                maximum: USER_MAX_LEVEL,
                             },
                             avatar: {
                                 type: 'number',
@@ -218,7 +220,7 @@ mocha.describe('Users', (): void => {
                                 level: {
                                     type: 'number',
                                     minimum: 1,
-                                    maximum: 255, // TODO: what's the max?
+                                    maximum: USER_MAX_LEVEL,
                                 },
                                 avatar: {
                                     type: 'number',
@@ -307,7 +309,7 @@ mocha.describe('Users', (): void => {
                                 level: {
                                     type: 'number',
                                     minimum: 1,
-                                    maximum: 255, // TODO: what's the max?
+                                    maximum: USER_MAX_LEVEL,
                                 },
                                 avatar: {
                                     type: 'number',
@@ -396,7 +398,7 @@ mocha.describe('Users', (): void => {
                                 level: {
                                     type: 'number',
                                     minimum: 1,
-                                    maximum: 255, // TODO: what's the max?
+                                    maximum: USER_MAX_LEVEL,
                                 },
                                 avatar: {
                                     type: 'number',
@@ -531,7 +533,7 @@ mocha.describe('Users', (): void => {
                             level: {
                                 type: 'number',
                                 minimum: 1,
-                                maximum: 255, // TODO: what's the max?
+                                maximum: USER_MAX_LEVEL,
                             },
                             avatar: {
                                 type: 'number',
@@ -861,7 +863,7 @@ mocha.describe('Users', (): void => {
                             level: {
                                 type: 'number',
                                 minimum: 1,
-                                maximum: 255, // TODO: what's the max?
+                                maximum: USER_MAX_LEVEL,
                             },
                             avatar: {
                                 type: 'number',

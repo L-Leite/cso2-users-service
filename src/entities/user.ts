@@ -4,6 +4,8 @@ import { UserVars } from 'entities/uservars'
 
 import { HashContainer } from 'hash'
 
+export const USER_MAX_LEVEL: number = 99
+
 /**
  * represents an user and its data
  */
@@ -138,7 +140,7 @@ export class User {
     public playerName: string
     @typegoose.prop({ required: true })
     public password: string
-    @typegoose.prop({ default: 1, required: true })
+    @typegoose.prop({ default: 1, max: USER_MAX_LEVEL, required: true })
     public level: number
     @typegoose.prop({ default: 1005, required: true })
     public avatar: number
