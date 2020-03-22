@@ -17,6 +17,221 @@ chai.should()
 chai.use(chaiHttp)
 chai.use(chaiJson)
 
+const userSchema = {
+    type: 'object',
+    required: [
+        'userId',
+        'userName',
+        'playerName',
+
+        'points',
+        'cash',
+        'mpoints',
+
+        'level',
+        'curExp',
+        'maxExp',
+        'vipLevel',
+        'vipXp',
+
+        'rank',
+        'rankFrame',
+
+        'playedMatches',
+        'wins',
+        'secondsPlayed',
+
+        'kills',
+        'deaths',
+        'assists',
+        'headshots',
+        'accuracy',
+
+        'avatar',
+        'unlockedAvatars',
+
+        'netCafeName',
+
+        'clanName',
+        'clanMark',
+
+        'worldRank',
+
+        'titleId',
+        'unlockedTitles',
+        'signature',
+
+        'unlockedAchievements',
+
+        'skillHumanCurXp',
+        'skillHumanMaxXp',
+        'skillHumanPoints',
+        'skillZombieCurXp',
+        'skillZombieMaxXp',
+        'skillZombiePoints',
+    ],
+    properties: {
+        userId: {
+            type: 'number',
+            minimum: 1,
+        },
+        userName: {
+            type: 'string',
+        },
+        playerName: {
+            type: 'string',
+        },
+
+        points: {
+            type: 'number',
+        },
+        cash: {
+            type: 'number',
+        },
+        mpoints: {
+            type: 'number',
+        },
+
+        level: {
+            type: 'number',
+            minimum: 1,
+            maximum: USER_MAX_LEVEL,
+        },
+        curExp: {
+            type: 'number',
+            minimum: 0,
+        },
+        maxExp: {
+            type: 'number',
+            minimum: 0,
+        },
+        vipLevel: {
+            type: 'number',
+        },
+        vipXp: {
+            type: 'number',
+        },
+
+        rank: {
+            type: 'number',
+        },
+        rankFrame: {
+            type: 'number',
+        },
+
+        playedMatches: {
+            type: 'number',
+            minimum: 0,
+        },
+        wins: {
+            type: 'number',
+            minimum: 0,
+        },
+        secondsPlayed: {
+            type: 'number',
+            minimum: 0,
+        },
+
+        kills: {
+            type: 'number',
+            minimum: 0,
+        },
+        deaths: {
+            type: 'number',
+            minimum: 0,
+        },
+        assists: {
+            type: 'number',
+            minimum: 0,
+        },
+        headshots: {
+            type: 'number',
+            minimum: 0,
+        },
+        accuracy: {
+            type: 'number',
+            minimum: 0,
+        },
+
+        avatar: {
+            type: 'number',
+        },
+        unlockedAvatars: {
+            type: 'array',
+            minItems: 128,
+            maxItems: 128,
+            items: {
+                type: 'number'
+            }
+        },
+
+        netCafeName: {
+            type: 'string',
+        },
+
+        clanName: {
+            type: 'string',
+        },
+        clanMark: {
+            type: 'number',
+        },
+
+        worldRank: {
+            type: 'number',
+        },
+
+        titleId: {
+            type: 'number',
+        },
+        unlockedTitles: {
+            type: 'array',
+            minItems: 128,
+            maxItems: 128,
+            items: {
+                type: 'number'
+            }
+        },
+        signature: {
+            type: 'string',
+        },
+
+        bestGamemode: {
+            type: 'number',
+        },
+        bestMap: {
+            type: 'number',
+        },
+
+        unlockedAchievements: {
+            type: 'array',
+            minItems: 128,
+            maxItems: 128,
+            items: {
+                type: 'number'
+            }
+        },
+
+        skillHumanCurXp: {
+            type: 'number',
+        },
+        skillHumanMaxXp: {
+            type: 'number',
+        },
+        skillHumanPoints: {
+            type: 'number',
+        },
+        skillZombieCurXp: {
+            type: 'number',
+        },
+        skillZombieMaxXp: {
+            type: 'number',
+        },
+        skillZombiePoints: {
+            type: 'number',
+        },
+    },
+}
+
 mocha.describe('Users', (): void => {
     let serviceInstance: ServiceInstance
 
@@ -39,72 +254,7 @@ mocha.describe('Users', (): void => {
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(201)
-                    res.body.should.be.jsonSchema({
-                        type: 'object',
-                        required: ['userId',
-                            'userName',
-                            'playerName',
-                            'level',
-                            'avatar',
-                            'curExp',
-                            'maxExp',
-                            'rank',
-                            'vipLevel',
-                            'wins',
-                            'kills',
-                            'deaths',
-                            'assists'],
-                        properties: {
-                            userId: {
-                                type: 'number',
-                                minimum: 1,
-                            },
-                            userName: {
-                                type: 'string',
-                            },
-                            playerName: {
-                                type: 'string',
-                            },
-                            level: {
-                                type: 'number',
-                                minimum: 1,
-                                maximum: USER_MAX_LEVEL,
-                            },
-                            avatar: {
-                                type: 'number',
-                            },
-                            curExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            maxExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            rank: {
-                                type: 'number',
-                            },
-                            vipLevel: {
-                                type: 'number',
-                            },
-                            wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            kills: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            deaths: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            assists: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                        },
-                    })
+                    res.body.should.be.jsonSchema(userSchema)
                     createdUserId = res.body.userId
                     return done()
                 })
@@ -185,72 +335,7 @@ mocha.describe('Users', (): void => {
                     res.body.should.be.jsonSchema({
                         type: 'array',
                         minItems: 2,
-                        items: {
-                            type: 'object',
-                            required: ['userId',
-                                'userName',
-                                'playerName',
-                                'level',
-                                'avatar',
-                                'curExp',
-                                'maxExp',
-                                'rank',
-                                'vipLevel',
-                                'wins',
-                                'kills',
-                                'deaths',
-                                'assists'],
-                            properties: {
-                                userId: {
-                                    type: 'number',
-                                    minimum: 1,
-                                },
-                                userName: {
-                                    type: 'string',
-                                },
-                                playerName: {
-                                    type: 'string',
-                                },
-                                level: {
-                                    type: 'number',
-                                    minimum: 1,
-                                    maximum: USER_MAX_LEVEL,
-                                },
-                                avatar: {
-                                    type: 'number',
-                                },
-                                curExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                maxExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                rank: {
-                                    type: 'number',
-                                },
-                                vipLevel: {
-                                    type: 'number',
-                                },
-                                wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                kills: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                deaths: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                assists: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                            },
-                        },
+                        items: userSchema,
                     })
                     return done()
                 })
@@ -269,72 +354,7 @@ mocha.describe('Users', (): void => {
                         type: 'array',
                         minItems: 1,
                         maxItems: 1,
-                        items: {
-                            type: 'object',
-                            required: ['userId',
-                                'userName',
-                                'playerName',
-                                'level',
-                                'avatar',
-                                'curExp',
-                                'maxExp',
-                                'rank',
-                                'vipLevel',
-                                'wins',
-                                'kills',
-                                'deaths',
-                                'assists'],
-                            properties: {
-                                userId: {
-                                    type: 'number',
-                                    minimum: 1,
-                                },
-                                userName: {
-                                    type: 'string',
-                                },
-                                playerName: {
-                                    type: 'string',
-                                },
-                                level: {
-                                    type: 'number',
-                                    minimum: 1,
-                                    maximum: USER_MAX_LEVEL,
-                                },
-                                avatar: {
-                                    type: 'number',
-                                },
-                                curExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                maxExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                rank: {
-                                    type: 'number',
-                                },
-                                vipLevel: {
-                                    type: 'number',
-                                },
-                                wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                kills: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                deaths: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                assists: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                            },
-                        },
+                        items: userSchema,
                     })
                     return done()
                 })
@@ -353,72 +373,7 @@ mocha.describe('Users', (): void => {
                         type: 'array',
                         minItems: 1,
                         maxItems: 1,
-                        items: {
-                            type: 'object',
-                            required: ['userId',
-                                'userName',
-                                'playerName',
-                                'level',
-                                'avatar',
-                                'curExp',
-                                'maxExp',
-                                'rank',
-                                'vipLevel',
-                                'wins',
-                                'kills',
-                                'deaths',
-                                'assists'],
-                            properties: {
-                                userId: {
-                                    type: 'number',
-                                    minimum: 1,
-                                },
-                                userName: {
-                                    type: 'string',
-                                },
-                                playerName: {
-                                    type: 'string',
-                                },
-                                level: {
-                                    type: 'number',
-                                    minimum: 1,
-                                    maximum: USER_MAX_LEVEL,
-                                },
-                                avatar: {
-                                    type: 'number',
-                                },
-                                curExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                maxExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                rank: {
-                                    type: 'number',
-                                },
-                                vipLevel: {
-                                    type: 'number',
-                                },
-                                wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                kills: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                deaths: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                assists: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                            },
-                        },
+                        items: userSchema,
                     })
                     return done()
                 })
@@ -483,72 +438,7 @@ mocha.describe('Users', (): void => {
                 .get('/users/' + createdUserId)
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
-                    res.body.should.be.jsonSchema({
-                        type: 'object',
-                        required: ['userId',
-                            'userName',
-                            'playerName',
-                            'level',
-                            'avatar',
-                            'curExp',
-                            'maxExp',
-                            'rank',
-                            'vipLevel',
-                            'wins',
-                            'kills',
-                            'deaths',
-                            'assists'],
-                        properties: {
-                            userId: {
-                                type: 'number',
-                                minimum: 1,
-                            },
-                            userName: {
-                                type: 'string',
-                            },
-                            playerName: {
-                                type: 'string',
-                            },
-                            level: {
-                                type: 'number',
-                                minimum: 1,
-                                maximum: USER_MAX_LEVEL,
-                            },
-                            avatar: {
-                                type: 'number',
-                            },
-                            curExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            maxExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            rank: {
-                                type: 'number',
-                            },
-                            vipLevel: {
-                                type: 'number',
-                            },
-                            wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            kills: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            deaths: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            assists: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                        },
-                    })
+                    res.body.should.be.jsonSchema(userSchema)
                     return done()
                 })
         })
@@ -615,60 +505,7 @@ mocha.describe('Users', (): void => {
                     .get('/users/' + createdUser)
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(200)
-                        res.body.should.be.jsonSchema({
-                            type: 'object',
-                            required: ['userId',
-                                'userName',
-                                'playerName',
-                                'level',
-                                'curExp',
-                                'maxExp',
-                                'wins',
-                                'kills',
-                                'deaths',
-                                'assists'],
-                            properties: {
-                                userId: {
-                                    type: 'number',
-                                    minimum: 1,
-                                },
-                                userName: {
-                                    type: 'string',
-                                },
-                                playerName: {
-                                    type: 'string',
-                                },
-                                level: {
-                                    type: 'number',
-                                    minimum: 1,
-                                    maximum: 100, // TODO: what's the max?
-                                },
-                                curExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                maxExp: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                kills: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                deaths: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                assists: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                            },
-                        })
+                        res.body.should.be.jsonSchema(userSchema)
                         chai.expect(res.body.wins).equal(16)
                         return done()
                     })
@@ -803,72 +640,7 @@ mocha.describe('Users', (): void => {
                 .get('/users/byname/testuser')
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
-                    res.body.should.be.jsonSchema({
-                        type: 'object',
-                        required: ['userId',
-                            'userName',
-                            'playerName',
-                            'level',
-                            'avatar',
-                            'curExp',
-                            'maxExp',
-                            'rank',
-                            'vipLevel',
-                            'wins',
-                            'kills',
-                            'deaths',
-                            'assists'],
-                        properties: {
-                            userId: {
-                                type: 'number',
-                                minimum: 1,
-                            },
-                            userName: {
-                                type: 'string',
-                            },
-                            playerName: {
-                                type: 'string',
-                            },
-                            level: {
-                                type: 'number',
-                                minimum: 1,
-                                maximum: USER_MAX_LEVEL,
-                            },
-                            avatar: {
-                                type: 'number',
-                            },
-                            curExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            maxExp: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            rank: {
-                                type: 'number',
-                            },
-                            vipLevel: {
-                                type: 'number',
-                            },
-                            wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            kills: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            deaths: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            assists: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                        },
-                    })
+                    res.body.should.be.jsonSchema(userSchema)
                     return done()
                 })
         })
