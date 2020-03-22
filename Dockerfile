@@ -14,7 +14,7 @@ COPY gulpfile.js ./
 COPY ts*.json ./
 
 # install npm dependencies
-RUN npm ci
+RUN yarn install
 RUN npm i -g gulp
 
 # build app from source

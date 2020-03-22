@@ -14,5 +14,8 @@ node --version
 echo 'npm version:'
 npm --version
 
+echo 'yarn version:'
+yarn --version
+
 # install dependencies
-npm ci
+yarn install
