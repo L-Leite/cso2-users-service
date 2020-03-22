@@ -156,6 +156,8 @@ export class User {
     public maxExp: number
     @typegoose.prop({ default: 1, min: 0, max: 7, required: true })
     public vipLevel: number
+    @typegoose.prop({ default: 0, required: true })
+    public vipXp: number
 
     @typegoose.prop({ default: 0, required: true })
     public rank: number
