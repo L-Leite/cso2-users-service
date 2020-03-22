@@ -8,10 +8,18 @@ types:
   Session: !include types/Session.raml
   NewUserRequest: !include types/NewUserRequest.raml
   NewSessionRequest: !include types/NewSessionRequest.raml
+  UserInventoryItem: !include types/UserInventoryItem.raml
+  UserInventory: !include types/UserInventory.raml
+  UserCosmetics: !include types/UserCosmetics.raml
+  UserLoadout: !include types/UserLoadout.raml
+  UserBuyMenu: !include types/UserBuyMenu.raml
 
 resourceTypes:
   collection: !include resourceTypes/collection.raml
+  crudresource: !include resourceTypes/crudresource.raml
   item: !include resourceTypes/item.raml
+  udonly: !include resourceTypes/udonly.raml
+  uidcollection: !include resourceTypes/uidcollection.raml
 
 traits:
   paged: !include traits/paged.raml
@@ -89,6 +97,35 @@ traits:
         itemPutReqDataType: integer
         itemPutReqDataDesc: The new channel's index where the user's currently at
         itemPutReqDataExample: 3
+/inventory/{userId}:
+  description:  Endpoint for requests about users' Inventories
+  uriParameters:
+    userId:
+      type: integer
+      description: The user's ID number.
+  type:
+    uidcollection:
+      uidColItemTypeName: UserInventory
+  /item:
+    type:
+      udonly:
+        udItemTypeName: UserInventoryItem
+        udUidName: User
+  /cosmetics:
+    description: Manages an user's equipped cosmetic items.
+    type:
+      crudresource:
+        resTypeName: UserCosmetics
+  /loadout:
+    description: Manages an user's weapon loadouts.
+    type:
+      crudresource:
+        resTypeName: UserLoadout
+  /buymenu:    
+    description: Manages an user's weapons buy menu.
+    type:
+      crudresource:
+        resTypeName: UserBuyMenu
 /ping:
   get:
     description: Checks if a service is running.

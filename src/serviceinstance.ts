@@ -10,9 +10,15 @@ import { MorganToWinstonStream } from 'log/morgan2winston'
 
 import { UserVars } from 'entities/uservars'
 
-import { PingRoute } from 'routes/ping'
 import { SessionsRoute } from 'routes/sessions'
 import { UsersRoute } from 'routes/users'
+
+import { InventoryBuyMenuRoute } from 'routes/inventory/buymenu'
+import { InventoryCosmeticsRoute } from 'routes/inventory/cosmetics'
+import { InventoryRoute } from 'routes/inventory/inventory'
+import { InventoryLoadoutRoute } from 'routes/inventory/loadout'
+
+import { PingRoute } from 'routes/ping'
 
 function formatMongoUri(host: string, port: string, dbName: string) {
   return 'mongodb://' + host + ':' + port + '/' + dbName
@@ -119,6 +125,12 @@ export class ServiceInstance {
   private setupRoutes(): void {
     const sessions: SessionsRoute = new SessionsRoute(this.app)
     const users: UsersRoute = new UsersRoute(this.app)
+
+    const inventory: InventoryRoute = new InventoryRoute(this.app)
+    const buyMenu: InventoryBuyMenuRoute = new InventoryBuyMenuRoute(this.app)
+    const cosmetics: InventoryCosmeticsRoute = new InventoryCosmeticsRoute(this.app)
+    const loadout: InventoryLoadoutRoute = new InventoryLoadoutRoute(this.app)
+
     const ping: PingRoute = new PingRoute(this.app)
   }
 
