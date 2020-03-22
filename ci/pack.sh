@@ -10,4 +10,4 @@ export SERVICE_VERSION=$(grep '"version":' package.json -m1 | cut -d\" -f4)
 export FILENAME_SUFFIX="$SERVICE_VERSION-$GIT_COMMIT_HASH-$GIT_BRANCH"
 
 # package the transpiled source code
-tar -zcf "cso2-users-service_$FILENAME_SUFFIX.tar.gz" dist package.json package-lock.json COPYING README.md
+tar -zcf "cso2-users-service_$FILENAME_SUFFIX.tar.gz" dist package.json yarn.lock COPYING README.md
