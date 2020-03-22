@@ -167,8 +167,6 @@ export class User {
     public playedMatches: number
     @typegoose.prop({ default: 0, required: true })
     public wins: number
-    @typegoose.prop({ default: 0, required: true  })
-    public losses: number
     @typegoose.prop({ default: 0, required: true })
     public secondsPlayed: number
 
@@ -203,10 +201,10 @@ export class User {
     })
     public unlockedAvatars: number[]
 
-    @typegoose.prop({ default: '', required: true })
+    @typegoose.prop({ default: ''})
     public netCafeName: string
 
-    @typegoose.prop({ default: '', required: true })
+    @typegoose.prop({ default: '' })
     public clanName: string
     @typegoose.prop({ default: 0, min: 0, max: 7, required: true })
     public clanMark: number
@@ -232,7 +230,7 @@ export class User {
         items: Number, required: true
     })
     public unlockedTitles: number[]
-    @typegoose.prop({ default: '', required: true })
+    @typegoose.prop({ default: '' })
     public signature: string
 
 

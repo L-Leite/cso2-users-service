@@ -96,10 +96,12 @@ export class ServiceInstance {
     await mongoose.connect(dbUri, { useNewUrlParser: true, useUnifiedTopology: true })
     LogInstance.info('Connected to ' + dbUri + ' db sucessfully')
 
-    // create global vars document
-    await UserVars.initialize()
-    // create a document with the default inventory if needed
-    await DefaultInventory.initialize()
+    await Promise.all([
+      // create global vars document
+      UserVars.initialize(),
+      // create a document with the default inventory if needed
+      DefaultInventory.initialize(),
+    ])
   }
 
   /**

@@ -51,7 +51,6 @@ mocha.describe('Users', (): void => {
                             'rank',
                             'vipLevel',
                             'wins',
-                            'losses',
                             'kills',
                             'deaths',
                             'assists'],
@@ -89,10 +88,6 @@ mocha.describe('Users', (): void => {
                                 type: 'number',
                             },
                             wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            losses: {
                                 type: 'number',
                                 minimum: 0,
                             },
@@ -202,7 +197,6 @@ mocha.describe('Users', (): void => {
                                 'rank',
                                 'vipLevel',
                                 'wins',
-                                'losses',
                                 'kills',
                                 'deaths',
                                 'assists'],
@@ -240,10 +234,6 @@ mocha.describe('Users', (): void => {
                                     type: 'number',
                                 },
                                 wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                losses: {
                                     type: 'number',
                                     minimum: 0,
                                 },
@@ -291,7 +281,6 @@ mocha.describe('Users', (): void => {
                                 'rank',
                                 'vipLevel',
                                 'wins',
-                                'losses',
                                 'kills',
                                 'deaths',
                                 'assists'],
@@ -329,10 +318,6 @@ mocha.describe('Users', (): void => {
                                     type: 'number',
                                 },
                                 wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                losses: {
                                     type: 'number',
                                     minimum: 0,
                                 },
@@ -380,7 +365,6 @@ mocha.describe('Users', (): void => {
                                 'rank',
                                 'vipLevel',
                                 'wins',
-                                'losses',
                                 'kills',
                                 'deaths',
                                 'assists'],
@@ -418,10 +402,6 @@ mocha.describe('Users', (): void => {
                                     type: 'number',
                                 },
                                 wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                losses: {
                                     type: 'number',
                                     minimum: 0,
                                 },
@@ -515,7 +495,6 @@ mocha.describe('Users', (): void => {
                             'rank',
                             'vipLevel',
                             'wins',
-                            'losses',
                             'kills',
                             'deaths',
                             'assists'],
@@ -553,10 +532,6 @@ mocha.describe('Users', (): void => {
                                 type: 'number',
                             },
                             wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            losses: {
                                 type: 'number',
                                 minimum: 0,
                             },
@@ -649,7 +624,6 @@ mocha.describe('Users', (): void => {
                                 'curExp',
                                 'maxExp',
                                 'wins',
-                                'losses',
                                 'kills',
                                 'deaths',
                                 'assists'],
@@ -678,10 +652,6 @@ mocha.describe('Users', (): void => {
                                     minimum: 0,
                                 },
                                 wins: {
-                                    type: 'number',
-                                    minimum: 0,
-                                },
-                                losses: {
                                     type: 'number',
                                     minimum: 0,
                                 },
@@ -845,7 +815,6 @@ mocha.describe('Users', (): void => {
                             'rank',
                             'vipLevel',
                             'wins',
-                            'losses',
                             'kills',
                             'deaths',
                             'assists'],
@@ -883,10 +852,6 @@ mocha.describe('Users', (): void => {
                                 type: 'number',
                             },
                             wins: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            losses: {
                                 type: 'number',
                                 minimum: 0,
                             },

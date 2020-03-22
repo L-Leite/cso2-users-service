@@ -14,7 +14,7 @@ let instance: ServiceInstance = null
  */
 async function startService() {
   instance = new ServiceInstance()
-  instance.listen()
+  await instance.listen()
 }
 
 startService()
