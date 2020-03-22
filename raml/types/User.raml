@@ -14,13 +14,27 @@ properties:
     type: string
     description: The user's ingame name
     example: "Gamer X"
+
+  points:
+    type: integer
+    description: The ammount of free currency.
+    example: 30000
+  cash:
+    type: integer
+    description: The ammount of paid currency.
+    example: 5000
+  mpoints:
+    type: integer
+    description: The ammount of some currency.
+    example: 30000
+
   level:
     type: integer
     description: The user's level
     minimum: 1
     maximum: 255
     example: 13
-  currentXp:
+  curExp:
     type: integer
     description: The user's current experience
     example: 3500
@@ -28,6 +42,24 @@ properties:
     type: integer
     description: The user's level maximum experience
     example: 5000
+  vipLevel:
+    type: integer
+    description: The user's VIP (paid) level
+    example: 2
+
+  rank:
+    type: integer
+    description: The user's rank
+    example: 50
+  rankFrame:
+    type: integer
+    description: The user's rank cosmetic frame
+    example: 2
+
+  playedMatches:
+    type: integer
+    description: The lifetime number of matches played
+    example: 28
   wins:
     type: integer
     description: The user's match wins
@@ -36,6 +68,11 @@ properties:
     type: integer
     description: The user's match losses
     example: 10
+  secondsPlayed:
+    type: integer
+    description: The lifetime number of seconds of gameplay time.
+    example: 58031
+
   kills:
     type: integer
     description: The user's kills
@@ -48,3 +85,108 @@ properties:
     type: integer
     description: The user's assists
     example: 7
+  headshots:
+    type: integer
+    description: The number of headshot kills.
+    example: 15
+  accuracy:
+    type: integer
+    description: The number an user's shots accuracy. (?)
+    example: 10
+
+  avatar:
+    type: integer
+    description: The User's equipped avatar. (?)
+    example: 1005
+  unlockedAvatars:
+    type: integer[]
+    description: The User's unlocked avatars. (?)
+    minItems: 128
+    maxItems: 128
+    example:
+      - 0xFF
+      - 0xFF
+      - ...
+
+  netCafeName:
+    type: string
+    description: The name of the current NetCafe
+    example: 'Some netcafe'
+
+  clanName:
+    type: string
+    description: The name of the User's current clan
+    example: 'My cool clan'
+  clanMark:
+    type: integer
+    description: The mark of the User's current clan
+    minimum: 0
+    maximum: 7
+    example: 2
+
+  worldRank:
+    type: integer
+    description: The User's world ranking
+    example: 50
+
+  titleId:
+    type: integer
+    description: The User's title ID
+    example: 50
+  unlockedAvatars:
+    type: integer[]
+    description: The User's unlocked titles. (?)
+    minItems: 128
+    maxItems: 128
+    example:
+      - 0xFF
+      - 0xFF
+      - ...
+  signature:
+    type: string
+    description: The user's custom signature
+    example: 'My cool clan'
+
+  bestGamemode:
+    type: integer
+    description: The User's most played (?) game mode
+    example: 5
+  bestMap:
+    type: integer
+    description: The User's most played (?) map
+    example: 3
+
+  unlockedAchievements:
+    type: integer[]
+    description: The User's unlocked achievements.
+    minItems: 128
+    maxItems: 128
+    example:
+      - 0xFF
+      - 0x00
+      - ...
+
+  skillHumanCurXp:
+    type: integer
+    description: The User's skill factory current human experience
+    example: 380
+  skillHumanMaxXp:
+    type: integer
+    description: The User's skill factory maximum human experience
+    example: 2500
+  skillHumanPoints:
+    type: integer
+    description: The User's skill factory human points
+    example: 10
+  skillZombieCurXp:
+    type: integer
+    description: The User's skill factory current zombie experience
+    example: 380
+  skillZombieMaxXp:
+    type: integer
+    description: The User's skill factory maximum zombie experience
+    example: 2500
+  skillZombiePoints:
+    type: integer
+    description: The User's skill factory zombie points
+    example: 10
