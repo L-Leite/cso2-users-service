@@ -36,7 +36,7 @@ export class InventoryLoadout {
      * @returns a promise to the user's inventory items
      */
     public static async create(userId: number): Promise<InventoryLoadout[]> {
-        const newLoadoutPromises: Array<Promise<InventoryLoadout>> = []
+        const newLoadoutPromises: Promise<InventoryLoadout>[] = []
         const defaultItems: DefaultInventory = await DefaultInventory.get()
 
         for (let i = 0; i < MAX_LOADOUTS; i++) {
