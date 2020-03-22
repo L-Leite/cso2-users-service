@@ -14,7 +14,7 @@ export class DefaultInventory {
         const entries: DefaultInventory[] = await DefaultInventoryModel.find()
 
         if (entries.length === 0) {
-            this.create()
+            await this.create()
         }
     }
 
@@ -54,7 +54,7 @@ export class DefaultInventory {
             melees: [79, 5232, 84, 5221, 5304, 5330, 5253, 5231, 5353],
             equipment: [36, 37, 23, 4, 8, 34, 0, 0, 0],
         })
-        return defaultInv.save()
+        return await defaultInv.save()
     }
 
     // inventory
