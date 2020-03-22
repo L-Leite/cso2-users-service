@@ -9,6 +9,7 @@ import { LogInstance } from 'log/loginstance'
 import { MorganToWinstonStream } from 'log/morgan2winston'
 
 import { UserVars } from 'entities/uservars'
+import { DefaultInventory } from 'entities/inventory/defaultinventory'
 
 import { SessionsRoute } from 'routes/sessions'
 import { UsersRoute } from 'routes/users'
@@ -97,6 +98,8 @@ export class ServiceInstance {
 
     // create global vars document
     await UserVars.initialize()
+    // create a document with the default inventory if needed
+    await DefaultInventory.initialize()
   }
 
   /**
