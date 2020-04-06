@@ -11,7 +11,6 @@ import { MorganToWinstonStream } from 'log/morgan2winston'
 import { UserVars } from 'entities/uservars'
 import { DefaultInventory } from 'entities/inventory/defaultinventory'
 
-import { SessionsRoute } from 'routes/sessions'
 import { UsersRoute } from 'routes/users'
 
 import { InventoryBuyMenuRoute } from 'routes/inventory/buymenu'
@@ -128,7 +127,6 @@ export class ServiceInstance {
    * setup the service's API routes
    */
   private setupRoutes(): void {
-    const sessions: SessionsRoute = new SessionsRoute(this.app)
     const users: UsersRoute = new UsersRoute(this.app)
 
     const inventory: InventoryRoute = new InventoryRoute(this.app)

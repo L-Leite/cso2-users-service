@@ -235,9 +235,9 @@ const userSchema = {
 mocha.describe('Users', (): void => {
     let serviceInstance: ServiceInstance
 
-    mocha.before((): void => {
+    mocha.before(async (): Promise<void> => {
         serviceInstance = new ServiceInstance()
-        serviceInstance.listen()
+        await serviceInstance.listen()
     })
 
     // test user creation first since other tests depend on it
@@ -671,7 +671,95 @@ mocha.describe('Users', (): void => {
         })
     })
 
-    mocha.after(async () => {
+    mocha.describe('POST /auth/login and /auth/logout', (): void => {
+        let createdUserId: number = 0
+
+        mocha.before((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/users')
+                .send({
+                    username: 'testuser',
+                    playername: 'TestingUser',
+                    password: '222222',
+                }).then((res: superagent.Response) => {
+                    createdUserId = res.body.userId
+                    return done()
+                })
+        })
+
+        mocha.it('Should authenticate an user', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/auth/login')
+                .send({
+                    username: 'testuser',
+                    password: '222222',
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    res.body.should.be.jsonSchema({
+                        type: 'object',
+                        required: [
+                            'userId',
+                        ],
+                        properties: {
+                            userId: {
+                                type: 'number',
+                            },
+                        },
+                    })
+                    res.body.userId.should.be.equal(createdUserId)
+                    return done()
+                })
+        })
+
+        mocha.it('Should log user out', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/auth/logout')
+                .send({
+                    userId: createdUserId
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    return done()
+                })
+        })
+
+        mocha.it('Should 400 when authenticating with a bad query', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/auth/login')
+                .send({
+                    uuuuser: 'yes\n\r\t',
+                    aeiou: 6789,
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(400)
+                    return done()
+                })
+        })
+        mocha.it('Should 401 when authenticating with bad user credentials', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/auth/login')
+                .send({
+                    username: 'baduser',
+                    password: 'badpassword',
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(401)
+                    return done()
+                })
+        })
+
+        mocha.after((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .delete('/users/' + createdUserId)
+                .send()
+                .then(() => {
+                    return done()
+                })
+        })
+    })
+
+    mocha.after(async (): Promise<void> => {
         await serviceInstance.stop()
     })
 })

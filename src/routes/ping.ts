@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { UserSession } from 'entities/usersession'
+import { SessionCounter } from 'entities/sessioncounter'
 
 /**
  * handles requests to /ping
@@ -18,9 +18,9 @@ export class PingRoute {
    * @param req the request data
    * @param res the response data
    */
-  private async onGetPing(req: express.Request, res: express.Response): Promise<void> {
+  private onGetPing(req: express.Request, res: express.Response): void {
     const pingReply = {
-      sessions: await UserSession.count(),
+      sessions: SessionCounter.Get(),
       uptime: process.uptime(),
     }
 

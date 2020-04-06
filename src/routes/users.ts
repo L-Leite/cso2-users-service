@@ -1,7 +1,9 @@
 import express from 'express'
 
-import { User } from 'entities/user'
 import { LogInstance } from 'log/loginstance'
+
+import { User } from 'entities/user'
+import { SessionCounter } from 'entities/sessioncounter'
 
 /**
  * handles requests to /users
@@ -15,6 +17,10 @@ export class UsersRoute {
       .get(this.onGetUsersById)
       .put(this.onPutUsersById)
       .delete(this.onDeleteUserById)
+    app.route('/auth/login')
+      .post(this.onPostLogin)
+    app.route('/auth/logout')
+      .post(this.onPostLogout)
     app.route('/users/byname/:username')
       .get(this.onGetUsersByName)
   }
@@ -187,6 +193,67 @@ export class UsersRoute {
         // if the user isn't found
         return res.status(404).end()
       }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a POST request to /auth/login is done
+   * checks if the user credentials are valid
+   * returns 200 if the credentials are valid
+   * returns 400 if the request is malformed
+   * returns 401 if the credentials are invalid
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private async onPostLogin(req: express.Request, res: express.Response): Promise<void> {
+    const userName: string = req.body.username
+    const password: string = req.body.password
+
+    if (userName == null
+      || password == null) {
+      return res.status(400).end()
+    }
+
+    try {
+      const loggedUserId: number = await User.validateCredentials(userName, password)
+
+      if (loggedUserId != null) {
+        SessionCounter.Increment()
+        return res.status(200).json({ userId: loggedUserId }).end()
+      } else {
+        return res.status(401).end()
+      }
+    } catch (error) {
+      LogInstance.error(error)
+      return res.status(500).end()
+    }
+  }
+
+  /**
+   * called when a POST request to /auth/logout is done
+   * logs an user out
+   * returns 200 if the user was logged out
+   * returns 400 if the request is malformed
+   * returns 404 if the use does not exist
+   * returns 500 if an internal error occured
+   * @param req the request data
+   * @param res the response data
+   */
+  private onPostLogout(req: express.Request, res: express.Response): void {
+    const userId: string = req.body.userId
+
+    if (userId == null) {
+      return res.status(400).end()
+    }
+
+    try {
+      // TODO: do anything with this maybe?
+      SessionCounter.Decrement()
+      return res.status(200).json().end()
     } catch (error) {
       LogInstance.error(error)
       return res.status(500).end()

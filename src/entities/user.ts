@@ -74,7 +74,7 @@ export class User {
      * @returns a promise with the new created user
      */
     public static async createUser(userName: string, playerName: string,
-                                   password: string): Promise<User> {
+        password: string): Promise<User> {
         const [nextUserId, passwordHash]: [number, HashContainer] = await Promise.all([
             UserVars.getNextUserId(),
             HashContainer.create(password),
@@ -112,21 +112,21 @@ export class User {
      * validate an user's credentials
      * @param userName the user's name
      * @param password the user's password
-     * @return a promise with the logged in user's ID
+     * @return a promise with the logged in user's ID, or null if failed
      */
     public static async validateCredentials(userName: string, password: string): Promise<number> {
         const user: User = await UserModel.findOne({ userName })
             .exec()
 
         if (user == null) {
-            return 0
+            return null
         }
 
         const targetHash: HashContainer = await HashContainer.from(user.password)
         const inputHash: HashContainer = await targetHash.cloneSettings(password)
 
         if (targetHash.compare(inputHash) === false) {
-            return 0
+            return null
         }
 
         return user.userId
@@ -152,7 +152,7 @@ export class User {
     public level: number
     @typegoose.prop({ default: 0, required: true })
     public curExp: number
-    @typegoose.prop({ default: 1000, required: true  })
+    @typegoose.prop({ default: 1000, required: true })
     public maxExp: number
     @typegoose.prop({ default: 1, min: 0, max: 7, required: true })
     public vipLevel: number
@@ -174,9 +174,9 @@ export class User {
 
     @typegoose.prop({ default: 0, required: true })
     public kills: number
-    @typegoose.prop({ default: 0, required: true  })
+    @typegoose.prop({ default: 0, required: true })
     public deaths: number
-    @typegoose.prop({ default: 0, required: true  })
+    @typegoose.prop({ default: 0, required: true })
     public assists: number
     @typegoose.prop({ default: 0, required: true })
     public headshots: number
@@ -203,7 +203,7 @@ export class User {
     })
     public unlockedAvatars: number[]
 
-    @typegoose.prop({ default: ''})
+    @typegoose.prop({ default: '' })
     public netCafeName: string
 
     @typegoose.prop({ default: '' })

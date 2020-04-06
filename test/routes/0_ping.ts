@@ -18,9 +18,9 @@ chai.use(chaiJson)
 mocha.describe('Ping', (): void => {
     let serviceInstance: ServiceInstance
 
-    mocha.before((): void => {
+    mocha.before(async (): Promise<void> => {
         serviceInstance = new ServiceInstance()
-        serviceInstance.listen()
+        await serviceInstance.listen()
     })
 
     mocha.describe('GET /ping', (): void => {
@@ -48,7 +48,7 @@ mocha.describe('Ping', (): void => {
         })
     })
 
-    mocha.after(async () => {
+    mocha.after(async (): Promise<void> => {
         await serviceInstance.stop()
     })
 })

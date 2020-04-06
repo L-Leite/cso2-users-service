@@ -5,9 +5,7 @@ version: 0.2.0
 
 types:
   User: !include types/User.raml
-  Session: !include types/Session.raml
   NewUserRequest: !include types/NewUserRequest.raml
-  NewSessionRequest: !include types/NewSessionRequest.raml
   UserInventoryItem: !include types/UserInventoryItem.raml
   UserInventory: !include types/UserInventory.raml
   UserCosmetics: !include types/UserCosmetics.raml
@@ -68,80 +66,104 @@ traits:
           description: The user does not exist.
         500:
           description: An internal error has occured.
-/sessions:
-  type:
-    collection:
-      collectionItemTypeName: Session
-      collectionCreateType: NewSessionRequest
-  get:
-    is:
-      - paged:
-          maxItems: 25
-    responses:
-      400:
-        description: The request is malformed.
-      413:
-        description: The requested number of sessions is too large.
-  /{ownerId}:
+/auth:
+  description: Route for user sign ups and logins.
+  /login:
+    post:
+      description: Attempt to login with credentials.
+      body:
+        application/json:
+          properties:
+            username: 
+              type: string
+              description: The user's name
+              example: "gamer_X"
+            password:
+              type: integer
+              description: The user's password
+              example: "myc00lp4ssw0rd"
+      responses:
+        200:
+          description: The user was logged in successfully.
+          body:
+            application/json:
+              userId:
+                type: integer
+                description: The logged in user's ID
+                example: 38
+        400:
+          description: The request is malformed.
+        401:
+          description: The credentials are invalid.
+        500:
+          description: An internal error has occured.
+  /logout:
+    post:
+      description: Attempt to logout an user.
+      body:
+        application/json:
+          properties:
+            userId: 
+              type: integer
+              description: The ID of the user to be logged out
+              example: 2348
+            password:
+      responses:
+        200:
+          description: The user was logged out successfully.
+        400:
+          description: The request is malformed.
+        404:
+          description: The user does not exist.
+        500:
+          description: An internal error has occured.
+/inventory:
+  description: Endpoint for requests about users' inventories
+  /{userId}:
+    description: Handles a specific user's Inventory
     uriParameters:
-      ownerId:
+      userId:
         type: integer
-        description: The session owner's user ID.
-        example: 38
+        description: The user's ID number.
     type:
-      item:
-        itemTypeName: Session
-        itemUniqueIdName: ownerId
-        itemUniqueIdType: integer
-        itemPutReqDataName: currentChannelIndex
-        itemPutReqDataType: integer
-        itemPutReqDataDesc: The new channel's index where the user's currently at
-        itemPutReqDataExample: 3
-/inventory/{userId}:
-  description:  Endpoint for requests about users' Inventories
-  uriParameters:
-    userId:
-      type: integer
-      description: The user's ID number.
-  type:
-    uidcollection:
-      uidColItemTypeName: UserInventory
-  /item:
-    type:
-      udonly:
-        udItemTypeName: UserInventoryItem
-        udUidName: User
-  /cosmetics:
-    description: Manages an user's equipped cosmetic items.
-    type:
-      crudresource:
-        resTypeName: UserCosmetics
-  /loadout:
-    description: Manages an user's weapon loadouts.
-    type:
-      crudresource:
-        resTypeName: UserLoadout
-  /buymenu:    
-    description: Manages an user's weapons buy menu.
-    type:
-      crudresource:
-        resTypeName: UserBuyMenu
+      uidcollection:
+        uidColItemTypeName: UserInventory
+    /item:
+      type:
+        udonly:
+          udItemTypeName: UserInventoryItem
+          udUidName: User
+    /cosmetics:
+      description: Manages an user's equipped cosmetic items.
+      type:
+        crudresource:
+          resTypeName: UserCosmetics
+    /loadout:
+      description: Manages an user's weapon loadouts.
+      type:
+        crudresource:
+          resTypeName: UserLoadout
+    /buymenu:    
+      description: Manages an user's weapons buy menu.
+      type:
+        crudresource:
+          resTypeName: UserBuyMenu
 /ping:
   get:
     description: Checks if a service is running.
-    body:
-      application/json:
-        properties:
-          sessions:
-            type: integer
-            description: The number of player sessions stored in the database
-            example: 3600
-          uptime:
-            type: integer
-            description: The number of seconds since the start of the service
-            example: 3600
     responses:
       200:
         description: The service is up and running.
+        body:
+          application/json:
+            properties:
+              sessions:
+                type: integer
+                description: The number of player sessions stored in the database
+                example: 3600
+              uptime:
+                type: integer
+                description: The number of seconds since the start of the service
+                example: 3600
       500:
         description: An internal error has occured.
