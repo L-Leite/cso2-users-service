@@ -671,7 +671,7 @@ mocha.describe('Users', (): void => {
         })
     })
 
-    mocha.describe('POST /auth/login and /auth/logout', (): void => {
+    mocha.describe('POST /users/auth/login and /users/auth/logout', (): void => {
         let createdUserId: number = 0
 
         mocha.before((done: mocha.Done): void => {
@@ -689,7 +689,7 @@ mocha.describe('Users', (): void => {
 
         mocha.it('Should authenticate an user', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
-                .post('/auth/login')
+                .post('/users/auth/login')
                 .send({
                     username: 'testuser',
                     password: '222222',
@@ -714,7 +714,7 @@ mocha.describe('Users', (): void => {
 
         mocha.it('Should log user out', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
-                .post('/auth/logout')
+                .post('/users/auth/logout')
                 .send({
                     userId: createdUserId
                 })
@@ -726,7 +726,7 @@ mocha.describe('Users', (): void => {
 
         mocha.it('Should 400 when authenticating with a bad query', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
-                .post('/auth/login')
+                .post('/users/auth/login')
                 .send({
                     uuuuser: 'yes\n\r\t',
                     aeiou: 6789,
@@ -738,7 +738,7 @@ mocha.describe('Users', (): void => {
         })
         mocha.it('Should 401 when authenticating with bad user credentials', (done: mocha.Done): void => {
             chai.request(serviceInstance.app)
-                .post('/auth/login')
+                .post('/users/auth/login')
                 .send({
                     username: 'baduser',
                     password: 'badpassword',

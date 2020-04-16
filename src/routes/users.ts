@@ -17,9 +17,9 @@ export class UsersRoute {
       .get(this.onGetUsersById)
       .put(this.onPutUsersById)
       .delete(this.onDeleteUserById)
-    app.route('/auth/login')
+    app.route('/users/auth/login')
       .post(this.onPostLogin)
-    app.route('/auth/logout')
+    app.route('/users/auth/logout')
       .post(this.onPostLogout)
     app.route('/users/byname/:username')
       .get(this.onGetUsersByName)
@@ -200,7 +200,7 @@ export class UsersRoute {
   }
 
   /**
-   * called when a POST request to /auth/login is done
+   * called when a POST request to /users/auth/login is done
    * checks if the user credentials are valid
    * returns 200 if the credentials are valid
    * returns 400 if the request is malformed
@@ -234,7 +234,7 @@ export class UsersRoute {
   }
 
   /**
-   * called when a POST request to /auth/logout is done
+   * called when a POST request to /users/auth/logout is done
    * logs an user out
    * returns 200 if the user was logged out
    * returns 400 if the request is malformed

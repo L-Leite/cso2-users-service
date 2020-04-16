@@ -66,57 +66,57 @@ traits:
           description: The user does not exist.
         500:
           description: An internal error has occured.
-/auth:
-  description: Route for user sign ups and logins.
-  /login:
-    post:
-      description: Attempt to login with credentials.
-      body:
-        application/json:
-          properties:
-            username: 
-              type: string
-              description: The user's name
-              example: "gamer_X"
-            password:
-              type: integer
-              description: The user's password
-              example: "myc00lp4ssw0rd"
-      responses:
-        200:
-          description: The user was logged in successfully.
-          body:
-            application/json:
-              userId:
+  /auth:
+    description: Route for user sign ups and logins.
+    /login:
+      post:
+        description: Attempt to login with credentials.
+        body:
+          application/json:
+            properties:
+              username: 
+                type: string
+                description: The user's name
+                example: "gamer_X"
+              password:
                 type: integer
-                description: The logged in user's ID
-                example: 38
-        400:
-          description: The request is malformed.
-        401:
-          description: The credentials are invalid.
-        500:
-          description: An internal error has occured.
-  /logout:
-    post:
-      description: Attempt to logout an user.
-      body:
-        application/json:
-          properties:
-            userId: 
-              type: integer
-              description: The ID of the user to be logged out
-              example: 2348
-            password:
-      responses:
-        200:
-          description: The user was logged out successfully.
-        400:
-          description: The request is malformed.
-        404:
-          description: The user does not exist.
-        500:
-          description: An internal error has occured.
+                description: The user's password
+                example: "myc00lp4ssw0rd"
+        responses:
+          200:
+            description: The user was logged in successfully.
+            body:
+              application/json:
+                userId:
+                  type: integer
+                  description: The logged in user's ID
+                  example: 38
+          400:
+            description: The request is malformed.
+          401:
+            description: The credentials are invalid.
+          500:
+            description: An internal error has occured.
+    /logout:
+      post:
+        description: Attempt to logout an user.
+        body:
+          application/json:
+            properties:
+              userId: 
+                type: integer
+                description: The ID of the user to be logged out
+                example: 2348
+              password:
+        responses:
+          200:
+            description: The user was logged out successfully.
+          400:
+            description: The request is malformed.
+          404:
+            description: The user does not exist.
+          500:
+            description: An internal error has occured.
 /inventory:
   description: Endpoint for requests about users' inventories
   /{userId}:
