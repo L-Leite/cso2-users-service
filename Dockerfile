@@ -1,24 +1,19 @@
-FROM node:11
+FROM mhart/alpine-node:13
 
 # create dir
 WORKDIR /srv/users-service
 
-# get dependencies
-COPY package*.json ./
+# copy dependencies and build files
+COPY package.json yarn.lock gulpfile.js tsconfig.json tslint.json ./
 
 # get source code
 COPY src ./src
 
-# get build files
-COPY gulpfile.js ./
-COPY ts*.json ./
-
 # install npm dependencies
-RUN yarn install
-RUN npm i -g gulp
+RUN yarn install --frozen-lockfile 
 
-# build app from source
-RUN gulp build
+# build service from source
+RUN npx gulp build
 
 # start the service
 CMD [ "node", "dist/service.js" ]
