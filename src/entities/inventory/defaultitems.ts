@@ -57,8 +57,11 @@ export const DefaultInventoryItems: InventoryItem[] = [
     new InventoryItem(159), new InventoryItem(160), new InventoryItem(161), new InventoryItem(162),
     new InventoryItem(163),
 
+    // unlock the third select option on Hide and Seek
+    new InventoryItem(2016),
+
     // zombie crush skills
-    new InventoryItem(2019), new InventoryItem(3), new InventoryItem(2020), new InventoryItem(50),
+    new InventoryItem(2019, 300), new InventoryItem(2020, 5000),
     new InventoryItem(2021), new InventoryItem(2022), new InventoryItem(2023),
 
     // weapon skins
