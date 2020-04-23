@@ -37,7 +37,7 @@ export class InventoryLoadout {
      */
     public static async create(userId: number): Promise<InventoryLoadout[]> {
         const newLoadoutPromises: Promise<InventoryLoadout>[] = []
-        const defaultItems: DefaultInventory = await DefaultInventory.get()
+        const defaultItems: DefaultInventory = DefaultInventory.get()
 
         for (let i = 0; i < MAX_LOADOUTS; i++) {
             const newLoadoutModel = new InventoryLoadoutModel({
@@ -53,7 +53,7 @@ export class InventoryLoadout {
             newLoadoutPromises.push(newLoadoutModel.save())
         }
 
-        return Promise.all(newLoadoutPromises)
+        return await Promise.all(newLoadoutPromises)
     }
 
     /**
@@ -64,7 +64,7 @@ export class InventoryLoadout {
      *          false if it wasn't (the user doesn't exist)
      */
     public static async set(updatedLoadout: ISetLoadoutBody,
-                            userId: number): Promise<boolean> {
+        userId: number): Promise<boolean> {
         const res =
             await InventoryLoadoutModel.updateOne(
                 { ownerId: userId, loadoutNum: updatedLoadout.loadoutNum },

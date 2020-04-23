@@ -33,7 +33,7 @@ export class InventoryCosmetics {
      * @returns a promise to the user's inventory items
      */
     public static async create(userId: number): Promise<InventoryCosmetics> {
-        const defaultItems: DefaultInventory = await DefaultInventory.get()
+        const defaultItems: DefaultInventory = DefaultInventory.get()
         const newCosmetics = new InventoryCosmeticsModel({
             ownerId: userId,
             ctItem: defaultItems.ctItem,
@@ -45,7 +45,7 @@ export class InventoryCosmetics {
             cardItem: defaultItems.cardItem,
             sprayItem: defaultItems.sprayItem,
         })
-        return newCosmetics.save()
+        return await newCosmetics.save()
     }
 
     /**
@@ -56,7 +56,7 @@ export class InventoryCosmetics {
      *          false if it weren't (the user doesn't exist)
      */
     public static async set(updatedCosmetics: ISetCosmeticsBody,
-                            userId: number): Promise<boolean> {
+        userId: number): Promise<boolean> {
         const res =
             await InventoryCosmeticsModel.updateOne(
                 { ownerId: userId }, { $set: updatedCosmetics })
@@ -71,7 +71,7 @@ export class InventoryCosmetics {
      */
     public static async remove(userId: number): Promise<boolean> {
         const res = await InventoryCosmeticsModel.deleteOne({ ownerId: userId })
-                .exec()
+            .exec()
         return res.ok === 1 && res.n === 1
     }
 

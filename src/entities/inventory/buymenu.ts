@@ -33,7 +33,7 @@ export class InventoryBuyMenu {
      * @returns a promise to the user's new buy menu
      */
     public static async create(userId: number): Promise<InventoryBuyMenu> {
-        const defaultItems: DefaultInventory = await DefaultInventory.get()
+        const defaultItems: DefaultInventory = DefaultInventory.get()
         const newBuyMenu = new InventoryBuyMenuModel({
             ownerId: userId,
             pistols: defaultItems.pistols,
@@ -45,7 +45,7 @@ export class InventoryBuyMenu {
             melees: defaultItems.melees,
             equipment: defaultItems.equipment,
         })
-        return newBuyMenu.save()
+        return await newBuyMenu.save()
     }
 
     /**
@@ -56,7 +56,7 @@ export class InventoryBuyMenu {
      *          false if it wasn't (the user doesn't exist)
      */
     public static async set(updatedBuyMenu: ISetBuyMenuBody,
-                            userId: number): Promise<boolean> {
+        userId: number): Promise<boolean> {
         const res =
             await InventoryBuyMenuModel.updateOne(
                 { ownerId: userId },

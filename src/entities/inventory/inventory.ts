@@ -23,9 +23,9 @@ export class Inventory {
      * @returns a promise to the user's inventory items
      */
     public static async create(userId: number): Promise<Inventory> {
-        const defaultItems: DefaultInventory = await DefaultInventory.get()
+        const defaultItems: DefaultInventory = DefaultInventory.get()
         const newInventory = new InventoryModel({ ownerId: userId, items: defaultItems.items })
-        return newInventory.save()
+        return await newInventory.save()
     }
 
     /**
@@ -49,7 +49,7 @@ export class Inventory {
      *          false if it wasn't (the user doesn't exist)
      */
     public static async addItem(itemId: number, itemAmmount: number,
-                                userId: number): Promise<boolean> {
+        userId: number): Promise<boolean> {
         const newItem = new InventoryItem(itemId, itemAmmount)
         const res =
             await InventoryModel.updateOne(
@@ -69,7 +69,7 @@ export class Inventory {
      * @returns a promise that returns true if anything was altered, false if not
      */
     public static async removeItem(itemId: number, userId: number,
-                                   itemAmmount?: number): Promise<boolean> {
+        itemAmmount?: number): Promise<boolean> {
         if (itemAmmount) {
             const inv: Inventory = await Inventory.get(userId)
 
@@ -112,7 +112,7 @@ export class Inventory {
      * @returns a promise that returns true if updated successfully, false if not
      */
     private static async updateItemQuantity(itemId: number, newAmmount: number,
-                                            ownerId: number): Promise<boolean> {
+        ownerId: number): Promise<boolean> {
         const res = await InventoryModel.updateOne(
             { ownerId, 'items.itemId': itemId },
             { $set: { 'items.$.ammount': newAmmount } })
