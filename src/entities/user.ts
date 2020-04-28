@@ -141,6 +141,9 @@ export class User {
     @typegoose.prop({ required: true })
     public password: string
 
+    @typegoose.prop({ default: false, required: true })
+    public gm: boolean
+
     @typegoose.prop({ default: 10000, required: true })
     public points: number
     @typegoose.prop({ default: 5000, required: true })

@@ -24,6 +24,8 @@ const userSchema = {
         'userName',
         'playerName',
 
+        'gm',
+
         'points',
         'cash',
         'mpoints',
@@ -80,6 +82,10 @@ const userSchema = {
         },
         playerName: {
             type: 'string',
+        },
+
+        gm: {
+            type: 'boolean',
         },
 
         points: {
