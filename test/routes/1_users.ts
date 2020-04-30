@@ -12,6 +12,8 @@ import { ServiceInstance } from 'serviceinstance'
 
 import { USER_MAX_LEVEL } from 'entities/user'
 
+import { SessionCounter } from 'sessioncounter'
+
 // setup chai
 chai.should()
 chai.use(chaiHttp)
@@ -714,6 +716,10 @@ mocha.describe('Users', (): void => {
                         },
                     })
                     res.body.userId.should.be.equal(createdUserId)
+
+                    const sessionsNum: number = SessionCounter.Get()
+                    sessionsNum.should.be.equal(1)
+
                     return done()
                 })
         })
@@ -726,6 +732,10 @@ mocha.describe('Users', (): void => {
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
+
+                    const sessionsNum: number = SessionCounter.Get()
+                    sessionsNum.should.be.equal(0)
+
                     return done()
                 })
         })

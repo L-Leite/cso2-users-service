@@ -1,6 +1,6 @@
 import express from 'express'
 
-import { SessionCounter } from 'entities/sessioncounter'
+import { SessionCounter } from 'sessioncounter'
 
 /**
  * handles requests to /ping

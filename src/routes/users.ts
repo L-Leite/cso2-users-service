@@ -3,7 +3,7 @@ import express from 'express'
 import { LogInstance } from 'log/loginstance'
 
 import { User } from 'entities/user'
-import { SessionCounter } from 'entities/sessioncounter'
+import { SessionCounter } from 'sessioncounter'
 
 /**
  * handles requests to /users
