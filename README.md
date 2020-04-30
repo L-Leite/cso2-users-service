@@ -47,14 +47,8 @@ export DB_NAME=cso2 # the database's name
 gulp test
 ```
 
-## Contributing
-
-Bug reports and pull requests are very much welcome.
-
-See the [current project's progress](https://github.com/Ochii/cso2-master-services/projects/1) for more information.
-
 ## License
 
-Read ```LICENSE``` for the project's license information.
+cso2-users-service is licensed under MIT License.
 
-This project is not affiliated with either Valve or Nexon. Counter-Strike: Online 2 is owned by these companies.
+This project is not affiliated with either Valve or Nexon.
