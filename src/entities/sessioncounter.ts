@@ -6,7 +6,7 @@ export class SessionCounter {
     }
 
     public static Decrement(): void {
-        SessionCounter.sessionNum++
+        SessionCounter.sessionNum--
     }
 
     public static Get(): number {
