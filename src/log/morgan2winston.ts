@@ -5,10 +5,10 @@ import { LogInstance } from 'log/loginstance'
  * @class MorganToWinstonStream
  */
 export class MorganToWinstonStream {
-  /**
-   * Output stream for writing log lines.
-   */
-  public write(str: string): void {
-    LogInstance.info(str)
-  }
+    /**
+     * Output stream for writing log lines.
+     */
+    public write(str: string): void {
+        LogInstance.info(str)
+    }
 }

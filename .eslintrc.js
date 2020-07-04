@@ -92,7 +92,7 @@ module.exports = {
             }
         ],
         '@typescript-eslint/unified-signatures': 'error',
-        camelcase: 'error',
+        //camelcase: 'error',
         complexity: 'off',
         'constructor-super': 'error',
         eqeqeq: ['error', 'smart'],

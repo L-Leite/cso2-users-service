@@ -1,7 +1,24 @@
-import * as typegoose from '@typegoose/typegoose'
+import { sql } from 'db'
 
-import { DefaultInventory } from 'entities/inventory/defaultinventory'
 import { InventoryItem } from 'entities/inventory/item'
+
+function FixInventoryStructure(
+    inv: Inventory | { items: number[][] }
+): Inventory {
+    const newInv = new Inventory()
+    /* newInv.owner_id = (inv as Inventory).owner_id
+    newInv.items = []
+
+    for (let i = 0; i < inv.items.length; i++) {
+        newInv.items[i] = new InventoryItem(
+            (inv.items[i] as number[])[0],
+            (inv.items[i] as number[])[1]
+        )
+    } */
+
+    Object.assign(newInv, inv)
+    return newInv
+}
 
 /**
  * represents an user's inventory
@@ -12,9 +29,35 @@ export class Inventory {
      * @param userId the owning user's ID
      * @returns a promise to the user's inventory items
      */
-    public static async get(userId: number): Promise<Inventory> {
-        return await InventoryModel.findOne({ ownerId: userId })
-            .exec()
+    public static async getById(userId: number): Promise<Inventory> {
+        const resRows = await sql<
+            Inventory
+        >`SELECT * FROM inventories WHERE owner_id = ${userId};`
+
+        if (resRows.count === 0) {
+            return null
+        } else if (resRows.count === 1) {
+            return FixInventoryStructure(resRows[0])
+        } else {
+            throw new Error('getById: got more than one row for an inventory')
+        }
+    }
+
+    /**
+     * does an inventory exist?
+     * @param userId the inventory owning user's ID
+     * @returns true if so, false if not
+     */
+    public static async doesExist(userId: number): Promise<boolean> {
+        const resRows = await sql<
+            Inventory
+        >`SELECT 1 FROM inventories WHERE owner_id = ${userId};`
+
+        if (resRows.count > 1) {
+            throw new Error('getById: got more than one row for an inventory')
+        }
+
+        return resRows.count === 1
     }
 
     /**
@@ -23,21 +66,30 @@ export class Inventory {
      * @returns a promise to the user's inventory items
      */
     public static async create(userId: number): Promise<Inventory> {
-        const defaultItems: DefaultInventory = DefaultInventory.get()
-        const newInventory = new InventoryModel({ ownerId: userId, items: defaultItems.items })
-        return await newInventory.save()
+        const res = await sql<Inventory>`
+            INSERT INTO inventories (owner_id) VALUES (${userId}) RETURNING *;`
+
+        if (res.count !== 1) {
+            throw new Error('INSERT query did not return a single row')
+        }
+
+        return FixInventoryStructure(res[0])
     }
 
     /**
-     * delete an inventory by its owner user ID
+     * delete an in ventory by its owner user ID
      * @param userId the owner's user ID
-     * @returns a promise returning true if deleted successfully, or false if not
+     * @returns true if deleted successfully, or false if the user does not exist
      */
     public static async remove(userId: number): Promise<boolean> {
-        const res = await InventoryModel.deleteOne({ ownerId: userId })
-            .exec()
-        // return true if deleted only one document (val.n) with success (val.ok)
-        return res.ok === 1 && res.n === 1
+        if ((await this.doesExist(userId)) === false) {
+            return false
+        }
+
+        await sql`
+            DELETE FROM inventories
+            WHERE owner_id = ${userId};`
+        return true
     }
 
     /**
@@ -48,14 +100,22 @@ export class Inventory {
      * @returns a promise that returns true if the item was added sucessfully,
      *          false if it wasn't (the user doesn't exist)
      */
-    public static async addItem(itemId: number, itemAmmount: number,
-        userId: number): Promise<boolean> {
-        const newItem = new InventoryItem(itemId, itemAmmount)
-        const res =
-            await InventoryModel.updateOne(
-                { ownerId: userId }, { $push: { items: newItem } })
-                .exec()
-        return res.ok === 1 && res.n === 1
+    public static async addItem(
+        itemId: number,
+        itemAmmount: number,
+        userId: number
+    ): Promise<boolean> {
+        if ((await this.doesExist(userId)) === false) {
+            return false
+        }
+
+        await sql`
+            UPDATE inventories
+            SET items = items || (${itemId}, ${itemAmmount})::InventoryItem
+            WHERE owner_id = ${userId};
+        `
+
+        return true
     }
 
     /**
@@ -68,20 +128,29 @@ export class Inventory {
      * @param itemAmmount the ammount of items to delete (default: null)
      * @returns a promise that returns true if anything was altered, false if not
      */
-    public static async removeItem(itemId: number, userId: number,
-        itemAmmount?: number): Promise<boolean> {
+    public static async removeItem(
+        itemId: number,
+        userId: number,
+        itemAmmount?: number
+    ): Promise<boolean> {
         if (itemAmmount) {
-            const inv: Inventory = await Inventory.get(userId)
+            const inv: Inventory = await Inventory.getById(userId)
 
-            const targetItem: InventoryItem = inv.items.find((item: InventoryItem) => {
-                return item.itemId === itemId
-            })
+            const targetItem: InventoryItem = inv.items.find(
+                (item: InventoryItem) => {
+                    return item.item_id === itemId
+                }
+            )
 
             const newAmmount: number = targetItem.ammount - itemAmmount
 
             if (newAmmount > 0) {
                 // just decrement the ammount if we have enough item quantity
-                return await Inventory.updateItemQuantity(itemId, newAmmount, userId)
+                return await Inventory.updateItemQuantity(
+                    itemId,
+                    newAmmount,
+                    userId
+                )
             } else {
                 // delete the item if the ammount is zero or less
                 return await Inventory.removeItemInternal(itemId, userId)
@@ -98,10 +167,30 @@ export class Inventory {
      * @param ownerId the owning user's ID
      * @returns a promise that returns true if deleted successfully, false if not
      */
-    private static async removeItemInternal(itemId: number, ownerId: number): Promise<boolean> {
-        const res = await InventoryModel.updateOne({ ownerId }, { $pull: { items: itemId } })
-            .exec()
-        return res.ok === 1 && res.n === 1
+    private static async removeItemInternal(
+        itemId: number,
+        ownerId: number
+    ): Promise<boolean> {
+        const userInventory = await Inventory.getById(ownerId)
+
+        if (userInventory == null) {
+            throw new Error(
+                'Tried to delete an item from a non existing inventory'
+            )
+        }
+
+        const oldItem = userInventory.GetItemById(itemId)
+
+        if (oldItem == null) {
+            throw new Error('Could not find an item to be deleted')
+        }
+
+        await sql`
+            UPDATE inventories
+            SET items = array_remove(items, (${oldItem.item_id}, ${oldItem.ammount})::InventoryItem)
+            WHERE owner_id = ${ownerId};
+        `
+        return true
     }
 
     /**
@@ -111,19 +200,49 @@ export class Inventory {
      * @param ownerId the owning user's ID
      * @returns a promise that returns true if updated successfully, false if not
      */
-    private static async updateItemQuantity(itemId: number, newAmmount: number,
-        ownerId: number): Promise<boolean> {
-        const res = await InventoryModel.updateOne(
-            { ownerId, 'items.itemId': itemId },
-            { $set: { 'items.$.ammount': newAmmount } })
-            .exec()
-        return res.ok === 1 && res.n === 1
+    private static async updateItemQuantity(
+        itemId: number,
+        newAmmount: number,
+        ownerId: number
+    ): Promise<boolean> {
+        const userInventory = await Inventory.getById(ownerId)
+
+        if (userInventory == null) {
+            throw new Error(
+                'Tried to delete an item from a non existing inventory'
+            )
+        }
+
+        const oldItem = userInventory.GetItemById(itemId)
+
+        if (oldItem == null) {
+            throw new Error('Could not find an item to be deleted')
+        }
+
+        const newItem = new InventoryItem(itemId, newAmmount)
+
+        await sql`
+            UPDATE inventories
+            SET items = array_replace(
+                items,
+                (${oldItem.item_id}, ${oldItem.ammount})::InventoryItem,
+                (${newItem.item_id}, ${newItem.ammount})::InventoryItem)
+            WHERE owner_id = ${ownerId};
+        `
+
+        return true
     }
 
-    @typegoose.prop({ index: true, required: true, unique: true })
-    public ownerId: number
-    @typegoose.prop({ required: true })
-    public items?: InventoryItem[]
-}
+    public GetItemById(targetItemId: number): InventoryItem {
+        for (const item of this.items) {
+            if (item.item_id === targetItemId) {
+                return item
+            }
+        }
 
-const InventoryModel = typegoose.getModelForClass(Inventory)
+        return null
+    }
+
+    public owner_id: number
+    public items: InventoryItem[]
+}

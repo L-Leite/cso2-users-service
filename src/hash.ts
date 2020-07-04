@@ -1,10 +1,11 @@
 import crypto from 'crypto'
 import pify from 'pify'
 
-export const HASH_PASSWORD_VERSION: number = 1
+export const HASH_PASSWORD_VERSION = 1
 
-const DEFAULT_HASH_ITERATIONS: number = 100000
-const DEFAULT_COMPONENT_COUNT: number = 4
+const DEFAULT_HASH_ITERATIONS = 100000
+const DEFAULT_KEY_LENGTH = 64
+const DEFAULT_COMPONENT_COUNT = 4
 
 /**
  * hashes a password with PBKDF2
@@ -13,8 +14,19 @@ const DEFAULT_COMPONENT_COUNT: number = 4
  * @param salt the hash's salt
  * @returns a string with a string format version, salt, iterations and hash respectively
  */
-async function generatePasswordHash(password: string, iterations: number, salt: string): Promise<Buffer> {
-    return await pify(crypto.pbkdf2)(password, salt, iterations, 64, 'sha512')
+async function generatePasswordHash(
+    password: string,
+    iterations: number,
+    salt: string,
+    keylen: number
+): Promise<Buffer> {
+    return (await pify(crypto.pbkdf2)(
+        password,
+        salt,
+        iterations,
+        keylen,
+        'sha512'
+    )) as Buffer
 }
 
 /**
@@ -26,13 +38,22 @@ export class HashContainer {
      * @param password the password to be hashed
      * @returns a new hash container object based on the input password
      */
-    public static async create(password: string, iterations: number = DEFAULT_HASH_ITERATIONS,
-                               salt: string = null): Promise<HashContainer> {
+    public static async create(
+        password: string,
+        iterations: number = DEFAULT_HASH_ITERATIONS,
+        salt: string = null,
+        keylen: number = DEFAULT_KEY_LENGTH
+    ): Promise<HashContainer> {
         if (salt == null) {
             salt = crypto.randomBytes(16).toString('hex')
         }
 
-        const hash: Buffer = await generatePasswordHash(password, iterations, salt)
+        const hash: Buffer = await generatePasswordHash(
+            password,
+            iterations,
+            salt,
+            keylen
+        )
 
         return new HashContainer(salt, iterations, hash)
     }
@@ -42,22 +63,25 @@ export class HashContainer {
      * @param composedHash the composed hash to be parsed
      * @returns a new hash container object with the parsed composed hash
      */
-    public static async from(composedHash: string): Promise<HashContainer> {
+    public static from(composedHash: string): HashContainer {
         const hashComponents: string[] = composedHash.split(':')
 
         if (hashComponents.length !== DEFAULT_COMPONENT_COUNT) {
-            throw new Error('The target\'s hash length ' + hashComponents.length + ' is invalid ')
+            throw new Error(
+                `The target's hash length ${hashComponents.length} is invalid`
+            )
         }
 
-        const passwordVersion: number = Number(hashComponents[0])
+        const passwordVersion = Number(hashComponents[0])
 
         if (passwordVersion !== HASH_PASSWORD_VERSION) {
-            throw new Error('The target\'s hash version ' + passwordVersion
-                + ' is different from ours ' + HASH_PASSWORD_VERSION)
+            throw new Error(
+                `The target's hash version ${passwordVersion} is different from ours ${HASH_PASSWORD_VERSION}`
+            )
         }
 
         const salt: string = hashComponents[1]
-        const iterations: number = Number(hashComponents[2])
+        const iterations = Number(hashComponents[2])
         const hash: Buffer = Buffer.from(hashComponents[3], 'hex')
 
         return new HashContainer(salt, iterations, hash)
@@ -79,8 +103,7 @@ export class HashContainer {
      * @returns true if they're equal, false if not
      */
     public compare(right: HashContainer): boolean {
-        if (this.salt !== right.salt
-            || this.iterations !== right.iterations) {
+        if (this.salt !== right.salt || this.iterations !== right.iterations) {
             return false
         }
 
@@ -102,6 +125,8 @@ export class HashContainer {
      * @returns the combined hash
      */
     public build(): string {
-        return HASH_PASSWORD_VERSION + ':' + this.salt + ':' + this.iterations + ':' + this.hash.toString('hex')
+        return `${HASH_PASSWORD_VERSION}:${this.salt}:${
+            this.iterations
+        }:${this.hash.toString('hex')}`
     }
 }

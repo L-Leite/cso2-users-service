@@ -1,5 +1,5 @@
 export class SessionCounter {
-    private static sessionNum: number = 0
+    private static sessionNum = 0
 
     public static Increment(): void {
         SessionCounter.sessionNum++

@@ -1,10 +1,62 @@
-import * as typegoose from '@typegoose/typegoose'
-
-import { UserVars } from 'entities/uservars'
-
 import { HashContainer } from 'hash'
+import { sql } from 'db'
+import { SetupSetParams } from 'utilitites'
 
-export const USER_MAX_LEVEL: number = 99
+export const USER_MAX_LEVEL = 99
+
+export type SetUserBody = {
+    gm: boolean
+
+    points: number
+    cash: number
+    mpoints: number
+
+    level: number
+    curExp: number
+    maxExp: number
+    vipLevel: number
+    vipXp: number
+
+    rank: number
+
+    rankFrame: number
+
+    playedMatches: number
+    wins: number
+    secondsPlayed: number
+
+    kills: number
+    deaths: number
+    assists: number
+    headshots: number
+    accuracy: number
+
+    avatar: number
+
+    unlockedAvatars: number[]
+
+    netCafeName: string
+
+    clanName: string
+    clanMark: number
+
+    worldRank: number
+
+    titleId: number
+    unlockedTitles: number[]
+    signature: string
+
+    bestGamemode: number
+    bestMap: number
+    unlockedAchievements: number[]
+
+    skillHumanCurXp: number
+    skillHumanMaxXp: number
+    skillHumanPoints: number
+    skillZombieCurXp: number
+    skillZombieMaxXp: number
+    skillZombiePoints: number
+}
 
 /**
  * represents an user and its data
@@ -16,9 +68,13 @@ export class User {
      * @param colLength the collection's length
      * @returns a promise with the users
      */
-    public static async getAllUsers(colOffset: number, colLength: number): Promise<User[]> {
-        return UserModel.find({}).skip(colOffset).limit(colLength)
-            .exec()
+    public static async getAll(
+        colOffset: number,
+        colLength: number
+    ): Promise<User[]> {
+        return await sql<
+            User[]
+        >`SELECT * FROM users LIMIT ${colLength} OFFSET ${colOffset};`
     }
 
     /**
@@ -26,9 +82,18 @@ export class User {
      * @param userId the target's user ID
      * @returns the target user, null if not
      */
-    public static async getUserById(userId: number): Promise<User> {
-        return UserModel.findOne({ userId })
-            .exec()
+    public static async getById(userId: number): Promise<User> {
+        const resRows = await sql<
+            User
+        >`SELECT * FROM users WHERE id = ${userId};`
+
+        if (resRows.count === 0) {
+            return null
+        } else if (resRows.count === 1) {
+            return resRows[0]
+        } else {
+            throw new Error('getUserById: got more than one row for an user')
+        }
     }
 
     /**
@@ -36,9 +101,18 @@ export class User {
      * @param userName the target's user name
      * @returns the target user if found, null if not
      */
-    public static async getUserByName(userName: string): Promise<User> {
-        return UserModel.findOne({ userName })
-            .exec()
+    public static async getByName(userName: string): Promise<User> {
+        const resRows = await sql<
+            User
+        >`SELECT * FROM users WHERE username = ${userName};`
+
+        if (resRows.count === 0) {
+            return null
+        } else if (resRows.count === 1) {
+            return resRows[0]
+        } else {
+            throw new Error('getUserByName: got more than one row for an user')
+        }
     }
 
     /**
@@ -47,23 +121,37 @@ export class User {
      * @param playerName the target's ingame player name
      * @returns true if so, false if not
      */
-    public static async isTaken(userName: string, playerName: string): Promise<boolean> {
-        const target: User = await UserModel.findOne({ $or: [{ userName }, { playerName }] })
-            .exec()
-        return target != null
+    public static async isTaken(
+        userName: string,
+        playerName: string
+    ): Promise<boolean> {
+        const resRows = await sql<User>`
+            SELECT * FROM users
+            WHERE username = ${userName} OR playername = ${playerName};
+        `
+        return resRows.count !== 0
     }
 
     /**
      * set an user's information properties
      * @param userId the target user's ID
      * @param updatedUser the new user information properties
-     * @returns true if updated sucessfully, false if not
+     * @returns true if updated sucessfully, false if the user does not exist
      */
-    public static async set(userId: number, updatedUser: any): Promise<boolean> {
-        const res =
-            await UserModel.updateOne({ userId }, { $set: updatedUser })
-                .exec()
-        return res.ok === 1 && res.n === 1
+    public static async set(
+        userId: number,
+        updatedUser: SetUserBody
+    ): Promise<boolean> {
+        if ((await User.getById(userId)) == null) {
+            return false
+        }
+
+        await sql`
+            UPDATE users
+            SET ${sql(updatedUser, ...SetupSetParams(updatedUser))}
+            WHERE id = ${userId};
+        `
+        return true
     }
 
     /**
@@ -73,39 +161,49 @@ export class User {
      * @param password the new user's password
      * @returns a promise with the new created user
      */
-    public static async createUser(userName: string, playerName: string,
-        password: string): Promise<User> {
-        const [nextUserId, passwordHash]: [number, HashContainer] = await Promise.all([
-            UserVars.getNextUserId(),
-            HashContainer.create(password),
-        ])
+    public static async create(
+        userName: string,
+        playerName: string,
+        password: string
+    ): Promise<User> {
+        const passwordHash: HashContainer = await HashContainer.create(password)
 
-        const newUserReq = new UserModel({
-            userId: nextUserId,
-            userName,
-            playerName,
-            password: passwordHash.build(),
-        })
+        // clear out plain password
+        password = null
 
-        const [newUser]: [User, boolean] = await Promise.all([
-            newUserReq.save(),
-            UserVars.setNextUserId(nextUserId + 1),
-        ])
+        const res = await sql<User>`
+            INSERT INTO users (username, playername, password_hash)
+            VALUES (${userName}, ${playerName}, ${passwordHash.build()})
+            RETURNING *;
+        `
 
-        return newUser
+        if (res.count !== 1) {
+            throw new Error('INSERT query did not return a single row')
+        }
+
+        const outUser = res[0]
+
+        // don't send the password hash over
+        outUser.password_hash = null
+
+        return outUser
     }
 
     /**
      * delete an user by its ID
      * @param userId the target's user ID
-     * @returns a promise with the target user
+     * @returns true if the user was deleted, false if the user was not fonud
      */
-    public static async removeUserById(userId: number): Promise<boolean> {
-        const res: { ok?: number; n?: number; } = await UserModel.deleteOne({ userId })
-            .exec()
+    public static async removeById(userId: number): Promise<boolean> {
+        if ((await User.getById(userId)) == null) {
+            return false
+        }
 
-        // return true if deleted only one document (val.n) with success (val.ok)
-        return res.ok === 1 && res.n === 1
+        await sql`
+            DELETE FROM users
+            WHERE id = ${userId};
+        `
+        return true
     }
 
     /**
@@ -114,164 +212,82 @@ export class User {
      * @param password the user's password
      * @return a promise with the logged in user's ID, or null if failed
      */
-    public static async validateCredentials(userName: string, password: string): Promise<number> {
-        const user: User = await UserModel.findOne({ userName })
-            .exec()
+    public static async validateCredentials(
+        userName: string,
+        password: string
+    ): Promise<number> {
+        const user: User = await User.getByName(userName)
 
         if (user == null) {
             return null
         }
 
-        const targetHash: HashContainer = await HashContainer.from(user.password)
-        const inputHash: HashContainer = await targetHash.cloneSettings(password)
+        const targetHash: HashContainer = HashContainer.from(user.password_hash)
+        const inputHash: HashContainer = await targetHash.cloneSettings(
+            password
+        )
 
         if (targetHash.compare(inputHash) === false) {
             return null
         }
 
-        return user.userId
+        return user.id
     }
 
-    @typegoose.prop({ index: true, required: true, unique: true })
-    public userId: number
-    @typegoose.prop({ lowercase: true, required: true, unique: true })
-    public userName: string
-    @typegoose.prop({ index: true, required: true, unique: true })
-    public playerName: string
-    @typegoose.prop({ required: true })
-    public password: string
+    public id: number
+    public username: string
+    public playername: string
+    public password_hash: string
 
-    @typegoose.prop({ default: false, required: true })
     public gm: boolean
 
-    @typegoose.prop({ default: 10000, required: true })
     public points: number
-    @typegoose.prop({ default: 5000, required: true })
     public cash: number
-    @typegoose.prop({ default: 30000, required: true })
     public mpoints: number
 
-    @typegoose.prop({ default: 1, max: USER_MAX_LEVEL, required: true })
     public level: number
-    @typegoose.prop({ default: 0, required: true })
-    public curExp: number
-    @typegoose.prop({ default: 1000, required: true })
-    public maxExp: number
-    @typegoose.prop({ default: 1, min: 0, max: 7, required: true })
-    public vipLevel: number
-    @typegoose.prop({ default: 0, required: true })
-    public vipXp: number
+    public cur_xp: BigInt
+    public max_xp: BigInt
+    public vip_level: number
+    public vip_xp: number
 
-    @typegoose.prop({ default: 0, required: true })
     public rank: number
 
-    @typegoose.prop({ default: 0, required: true })
-    public rankFrame: number
+    public rank_frame: number
 
-    @typegoose.prop({ default: 0, required: true })
-    public playedMatches: number
-    @typegoose.prop({ default: 0, required: true })
+    public played_matches: number
     public wins: number
-    @typegoose.prop({ default: 0, required: true })
-    public secondsPlayed: number
+    public seconds_played: number
 
-    @typegoose.prop({ default: 0, required: true })
     public kills: number
-    @typegoose.prop({ default: 0, required: true })
     public deaths: number
-    @typegoose.prop({ default: 0, required: true })
     public assists: number
-    @typegoose.prop({ default: 0, required: true })
     public headshots: number
-    @typegoose.prop({ default: 100, required: true })
     public accuracy: number
 
-
-    @typegoose.prop({ default: 1005, required: true })
     public avatar: number
+    public unlocked_avatars: number[]
 
-    @typegoose.arrayProp({
-        default: [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF],
-        items: Number, required: true
-    })
-    public unlockedAvatars: number[]
-
-    @typegoose.prop({ default: '' })
-    public netCafeName: string
-
-    @typegoose.prop({ default: '' })
-    public clanName: string
-    @typegoose.prop({ default: 0, min: 0, max: 7, required: true })
-    public clanMark: number
-
-    @typegoose.prop({ default: 0, required: true })
-    public worldRank: number
-
-
-    @typegoose.prop({ default: 0, required: true })
-    public titleId: number
-    @typegoose.arrayProp({
-        default: [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF],
-        items: Number, required: true
-    })
+    public title: number
     public unlockedTitles: number[]
-    @typegoose.prop({ default: '' })
     public signature: string
 
-
-    @typegoose.prop({ default: 0, required: true })
-    public bestGamemode: number
-    @typegoose.prop({ default: 0, required: true })
-    public bestMap: number
-
-    @typegoose.arrayProp({
-        default: [0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-            0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00],
-        items: Number, required: true
-    })
     public unlockedAchievements: number[]
 
-    @typegoose.prop({ default: 0, required: true })
-    public skillHumanCurXp: number
-    @typegoose.prop({ default: 0, required: true })
-    public skillHumanMaxXp: number
-    @typegoose.prop({ default: 0, required: true })
-    public skillHumanPoints: number
-    @typegoose.prop({ default: 0, required: true })
-    public skillZombieCurXp: number
-    @typegoose.prop({ default: 0, required: true })
-    public skillZombieMaxXp: number
-    @typegoose.prop({ default: 0, required: true })
-    public skillZombiePoints: number
-}
+    public netcafe_name: string
 
-const UserModel = typegoose.getModelForClass(User)
+    public clan_name: string
+    public clan_mark: number
+
+    public world_rank: number
+
+    public best_gamemode: number
+    public best_map: number
+
+    public skill_human_curxp: BigInt
+    public skill_human_maxxp: BigInt
+    public skill_human_points: BigInt
+    public skill_zombie_curxp: BigInt
+    public skill_zombie_maxxp: BigInt
+    public skill_zombie_points: BigInt
+}

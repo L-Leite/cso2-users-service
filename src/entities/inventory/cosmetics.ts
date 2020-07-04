@@ -1,16 +1,15 @@
-import * as typegoose from '@typegoose/typegoose'
+import { sql } from 'db'
+import { SetupSetParams } from 'utilitites'
 
-import { DefaultInventory } from 'entities/inventory/defaultinventory'
-
-export interface ISetCosmeticsBody {
-    ctItem?: number
-    terItem?: number
-    headItem?: number
-    gloveItem?: number
-    backItem?: number
-    stepsItem?: number
-    cardItem?: number
-    sprayItem?: number
+export type ISetCosmeticsBody = {
+    ct_item?: number
+    ter_item?: number
+    head_item?: number
+    glove_item?: number
+    back_item?: number
+    steps_item?: number
+    card_item?: number
+    spray_item?: number
 }
 
 /**
@@ -22,9 +21,18 @@ export class InventoryCosmetics {
      * @param userId the owning user's ID
      * @returns a promise to the user's cosmetics
      */
-    public static async get(userId: number): Promise<InventoryCosmetics> {
-        return await InventoryCosmeticsModel.findOne({ ownerId: userId })
-            .exec()
+    public static async getById(userId: number): Promise<InventoryCosmetics> {
+        const resRows = await sql<
+            InventoryCosmetics
+        >`SELECT * FROM inventory_cosmetics WHERE owner_id = ${userId};`
+
+        if (resRows.count === 0) {
+            return null
+        } else if (resRows.count === 1) {
+            return resRows[0]
+        } else {
+            throw new Error('getById: got more than one row for an inventory')
+        }
     }
 
     /**
@@ -33,66 +41,65 @@ export class InventoryCosmetics {
      * @returns a promise to the user's inventory items
      */
     public static async create(userId: number): Promise<InventoryCosmetics> {
-        const defaultItems: DefaultInventory = DefaultInventory.get()
-        const newCosmetics = new InventoryCosmeticsModel({
-            ownerId: userId,
-            ctItem: defaultItems.ctItem,
-            terItem: defaultItems.terItem,
-            headItem: defaultItems.headItem,
-            gloveItem: defaultItems.gloveItem,
-            backItem: defaultItems.backItem,
-            stepsItem: defaultItems.stepsItem,
-            cardItem: defaultItems.cardItem,
-            sprayItem: defaultItems.sprayItem,
-        })
-        return await newCosmetics.save()
+        const res = await sql<InventoryCosmetics>`
+            INSERT INTO inventory_cosmetics(owner_id) VALUES(${userId}) RETURNING *;`
+
+        if (res.count !== 1) {
+            throw new Error('INSERT query did not return a single row')
+        }
+
+        return res[0]
     }
 
     /**
      * set an user's equipped cosmetics
      * @param updatedCosmetics the new cosmetics
      * @param userId the owning user's ID
-     * @returns a promise that returns true if the cosmetics were updated sucessfully,
+     * @returns true if the cosmetics were updated sucessfully,
      *          false if it weren't (the user doesn't exist)
      */
-    public static async set(updatedCosmetics: ISetCosmeticsBody,
-        userId: number): Promise<boolean> {
-        const res =
-            await InventoryCosmeticsModel.updateOne(
-                { ownerId: userId }, { $set: updatedCosmetics })
-                .exec()
-        return res.ok === 1 && res.n === 1
+    public static async set(
+        updatedCosmetics: ISetCosmeticsBody,
+        userId: number
+    ): Promise<boolean> {
+        if ((await this.getById(userId)) == null) {
+            return false
+        }
+
+        await sql`
+            UPDATE inventory_cosmetics
+            SET ${sql(updatedCosmetics, ...SetupSetParams(updatedCosmetics))}
+            WHERE owner_id = ${userId};
+        `
+
+        return true
     }
 
     /**
-     * delete a buy menu by its owner user ID
+     * delete a cosmetics table by its owner user ID
      * @param userId the owner's user ID
-     * @returns a promise returning true if deleted successfully, or false if not
+     * @returns true if deleted successfully, or false if the user does not exist
      */
     public static async remove(userId: number): Promise<boolean> {
-        const res = await InventoryCosmeticsModel.deleteOne({ ownerId: userId })
-            .exec()
-        return res.ok === 1 && res.n === 1
+        if ((await this.getById(userId)) == null) {
+            return false
+        }
+
+        await sql`
+            DELETE FROM inventory_cosmetics
+            WHERE owner_id = ${userId};
+        `
+
+        return true
     }
 
-    @typegoose.prop({ index: true, required: true, unique: true })
-    public ownerId: number
-    @typegoose.prop({ required: true })
-    public ctItem: number
-    @typegoose.prop({ required: true })
-    public terItem: number
-    @typegoose.prop({ required: true })
-    public headItem: number
-    @typegoose.prop({ required: true })
-    public gloveItem: number
-    @typegoose.prop({ required: true })
-    public backItem: number
-    @typegoose.prop({ required: true })
-    public stepsItem: number
-    @typegoose.prop({ required: true })
-    public cardItem: number
-    @typegoose.prop({ required: true })
-    public sprayItem: number
+    public owner_id: number
+    public ct_item: number
+    public ter_item: number
+    public head_item: number
+    public glove_item: number
+    public back_item: number
+    public steps_item: number
+    public card_item: number
+    public spray_item: number
 }
-
-export const InventoryCosmeticsModel = typegoose.getModelForClass(InventoryCosmetics)

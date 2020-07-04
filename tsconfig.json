@@ -3,20 +3,17 @@
         "baseUrl": ".",
         "esModuleInterop": true,
         "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,           
+        "experimentalDecorators": true,
         "module": "commonjs",
         "moduleResolution": "node",
         "noImplicitAny": true,
         "outDir": "dist",
+        "removeComments": true,
         "sourceMap": true,
         "paths": {
-            "*": [
-                "src/*"
-            ]
+            "*": ["src/*"]
         },
         "target": "es6"
     },
-    "include": [
-        "src/**/*"
-    ]
+    "include": ["src/**/*"]
 }

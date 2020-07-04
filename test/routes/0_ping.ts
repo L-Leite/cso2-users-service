@@ -18,37 +18,42 @@ chai.use(chaiJson)
 mocha.describe('Ping', (): void => {
     let serviceInstance: ServiceInstance
 
-    mocha.before(async (): Promise<void> => {
+    mocha.before((): void => {
         serviceInstance = new ServiceInstance()
-        await serviceInstance.listen()
+        serviceInstance.listen()
     })
 
     mocha.describe('GET /ping', (): void => {
-        mocha.it('Should get the service\'s status', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/ping')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(200)
-                    res.body.should.be.jsonSchema({
-                        type: 'object',
-                        required: ['sessions', 'uptime'],
-                        properties: {
-                            sessions: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                            uptime: {
-                                type: 'number',
-                                minimum: 0,
-                            },
-                        },
+        mocha.it(
+            "Should get the service's status",
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/ping')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(200)
+                        res.body.should.be.jsonSchema({
+                            type: 'object',
+                            required: ['sessions', 'uptime'],
+                            properties: {
+                                sessions: {
+                                    type: 'number',
+                                    minimum: 0
+                                },
+                                uptime: {
+                                    type: 'number',
+                                    minimum: 0
+                                }
+                            }
+                        })
+                        return done()
                     })
-                    return done()
-                })
-        })
+            }
+        )
     })
 
-    mocha.after(async (): Promise<void> => {
-        await serviceInstance.stop()
-    })
+    mocha.after(
+        async (): Promise<void> => {
+            await serviceInstance.stop()
+        }
+    )
 })

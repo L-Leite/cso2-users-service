@@ -22,9 +22,9 @@ chai.use(chaiJson)
 const userSchema = {
     type: 'object',
     required: [
-        'userId',
-        'userName',
-        'playerName',
+        'id',
+        'username',
+        'playername',
 
         'gm',
 
@@ -33,17 +33,17 @@ const userSchema = {
         'mpoints',
 
         'level',
-        'curExp',
-        'maxExp',
-        'vipLevel',
-        'vipXp',
+        'cur_xp',
+        'max_xp',
+        'vip_level',
+        'vip_xp',
 
         'rank',
-        'rankFrame',
+        'rank_frame',
 
-        'playedMatches',
+        'played_matches',
         'wins',
-        'secondsPlayed',
+        'seconds_played',
 
         'kills',
         'deaths',
@@ -52,119 +52,120 @@ const userSchema = {
         'accuracy',
 
         'avatar',
-        'unlockedAvatars',
+        'unlocked_avatars',
 
-        'netCafeName',
-
-        'clanName',
-        'clanMark',
-
-        'worldRank',
-
-        'titleId',
-        'unlockedTitles',
+        'title',
+        'unlocked_titles',
         'signature',
 
-        'unlockedAchievements',
+        'unlocked_achievements',
 
-        'skillHumanCurXp',
-        'skillHumanMaxXp',
-        'skillHumanPoints',
-        'skillZombieCurXp',
-        'skillZombieMaxXp',
-        'skillZombiePoints',
+        'netcafe_name',
+
+        'clan_name',
+        'clan_mark',
+
+        'world_rank',
+
+        'best_gamemode',
+        'best_map',
+
+        'skill_human_curxp',
+        'skill_human_maxxp',
+        'skill_human_points',
+        'skill_zombie_curxp',
+        'skill_zombie_maxxp',
+        'skill_zombie_points'
     ],
     properties: {
-        userId: {
+        id: {
             type: 'number',
-            minimum: 1,
+            minimum: 1
         },
-        userName: {
-            type: 'string',
+        username: {
+            type: 'string'
         },
-        playerName: {
-            type: 'string',
+        playername: {
+            type: 'string'
         },
 
         gm: {
-            type: 'boolean',
+            type: 'boolean'
         },
 
         points: {
-            type: 'number',
+            type: 'number'
         },
         cash: {
-            type: 'number',
+            type: 'number'
         },
         mpoints: {
-            type: 'number',
+            type: 'number'
         },
 
         level: {
             type: 'number',
             minimum: 1,
-            maximum: USER_MAX_LEVEL,
+            maximum: USER_MAX_LEVEL
         },
-        curExp: {
-            type: 'number',
-            minimum: 0,
+        cur_xp: {
+            type: 'string'
         },
-        maxExp: {
-            type: 'number',
-            minimum: 0,
+        max_xp: {
+            type: 'string'
         },
-        vipLevel: {
-            type: 'number',
+        vip_level: {
+            type: 'number'
         },
-        vipXp: {
-            type: 'number',
+        vip_xp: {
+            type: 'number'
         },
 
         rank: {
-            type: 'number',
+            type: 'number'
         },
-        rankFrame: {
-            type: 'number',
+        rank_frame: {
+            type: 'number'
         },
 
-        playedMatches: {
+        played_matches: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
         wins: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
-        secondsPlayed: {
+        seconds_played: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
 
         kills: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
         deaths: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
         assists: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
         headshots: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
         accuracy: {
             type: 'number',
-            minimum: 0,
+            minimum: 0
         },
 
         avatar: {
-            type: 'number',
+            type: 'number'
         },
-        unlockedAvatars: {
+        unlocked_avatars: {
             type: 'array',
             minItems: 128,
             maxItems: 128,
@@ -173,25 +174,10 @@ const userSchema = {
             }
         },
 
-        netCafeName: {
-            type: 'string',
+        title: {
+            type: 'number'
         },
-
-        clanName: {
-            type: 'string',
-        },
-        clanMark: {
-            type: 'number',
-        },
-
-        worldRank: {
-            type: 'number',
-        },
-
-        titleId: {
-            type: 'number',
-        },
-        unlockedTitles: {
+        unlocked_titles: {
             type: 'array',
             minItems: 128,
             maxItems: 128,
@@ -200,17 +186,10 @@ const userSchema = {
             }
         },
         signature: {
-            type: 'string',
+            type: 'string'
         },
 
-        bestGamemode: {
-            type: 'number',
-        },
-        bestMap: {
-            type: 'number',
-        },
-
-        unlockedAchievements: {
+        unlocked_achievements: {
             type: 'array',
             minItems: 128,
             maxItems: 128,
@@ -219,33 +198,73 @@ const userSchema = {
             }
         },
 
-        skillHumanCurXp: {
-            type: 'number',
+        netcafe_name: {
+            type: 'string'
         },
-        skillHumanMaxXp: {
-            type: 'number',
+
+        clan_name: {
+            type: 'string'
         },
-        skillHumanPoints: {
-            type: 'number',
+        clan_mark: {
+            type: 'number'
         },
-        skillZombieCurXp: {
-            type: 'number',
+
+        world_rank: {
+            type: 'number'
         },
-        skillZombieMaxXp: {
-            type: 'number',
+
+        best_gamemode: {
+            type: 'number'
         },
-        skillZombiePoints: {
-            type: 'number',
+        best_map: {
+            type: 'number'
         },
-    },
+
+        skill_human_curxp: {
+            type: 'string'
+        },
+        skill_human_maxxp: {
+            type: 'string'
+        },
+        skill_human_points: {
+            type: 'number'
+        },
+        skill_zombie_curxp: {
+            type: 'string'
+        },
+        skill_zombie_maxxp: {
+            type: 'string'
+        },
+        skill_zombie_points: {
+            type: 'number'
+        }
+    }
+}
+
+function IsStringBigInt(testStr: string): boolean {
+    try {
+        BigInt(testStr)
+        return true
+    } catch (error) {
+        return false
+    }
+}
+
+function UserSchema_TestBigInts(res: superagent.Response): void {
+    IsStringBigInt(res.body.cur_xp).should.be.equal(true)
+    IsStringBigInt(res.body.max_xp).should.be.equal(true)
+    IsStringBigInt(res.body.skill_human_curxp).should.be.equal(true)
+    IsStringBigInt(res.body.skill_human_maxxp).should.be.equal(true)
+    IsStringBigInt(res.body.skill_zombie_curxp).should.be.equal(true)
+    IsStringBigInt(res.body.skill_zombie_maxxp).should.be.equal(true)
 }
 
 mocha.describe('Users', (): void => {
     let serviceInstance: ServiceInstance
 
-    mocha.before(async (): Promise<void> => {
+    mocha.before((): void => {
         serviceInstance = new ServiceInstance()
-        await serviceInstance.listen()
+        serviceInstance.listen()
     })
 
     // test user creation first since other tests depend on it
@@ -258,41 +277,47 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
+                    password: '222222'
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(201)
                     res.body.should.be.jsonSchema(userSchema)
-                    createdUserId = res.body.userId
+                    UserSchema_TestBigInts(res)
+                    createdUserId = res.body.id
                     return done()
                 })
         })
-        mocha.it('Should 400 when creating a new user with bad query parameters', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users')
-                .send({
-                    badparam: 'testuser',
-                    ugly: 'TestingUser',
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(400)
-                    return done()
-                })
-        })
-        mocha.it('Should 409 when creating a new user with an existing username/playername',
+        mocha.it(
+            'Should 400 when creating a new user with bad query parameters',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users')
+                    .send({
+                        badparam: 'testuser',
+                        ugly: 'TestingUser'
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(400)
+                        return done()
+                    })
+            }
+        )
+        mocha.it(
+            'Should 409 when creating a new user with an existing username/playername',
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .post('/users')
                     .send({
                         username: 'testuser',
                         playername: 'TestingUser',
-                        password: '222222',
+                        password: '222222'
                     })
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(409)
                         return done()
                     })
-            })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -301,7 +326,6 @@ mocha.describe('Users', (): void => {
                 .then(() => {
                     return done()
                 })
-
         })
     })
 
@@ -315,17 +339,19 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    firstUserId = res.body.userId
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    firstUserId = res.body.id
                     chai.request(serviceInstance.app)
                         .post('/users')
                         .send({
                             username: 'gamer',
                             playername: 'cso2player',
-                            password: '123456',
-                        }).then((res2: superagent.Response) => {
-                            secondUserId = res2.body.userId
+                            password: '123456'
+                        })
+                        .then((res2: superagent.Response) => {
+                            secondUserId = res2.body.id
                             return done()
                         })
                 })
@@ -336,14 +362,14 @@ mocha.describe('Users', (): void => {
                 .get('/users')
                 .query({
                     offset: 0,
-                    length: 50,
+                    length: 50
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
                     res.body.should.be.jsonSchema({
                         type: 'array',
                         minItems: 2,
-                        items: userSchema,
+                        items: userSchema
                     })
                     return done()
                 })
@@ -354,7 +380,7 @@ mocha.describe('Users', (): void => {
                 .get('/users')
                 .query({
                     offset: 0,
-                    length: 1,
+                    length: 1
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
@@ -362,7 +388,7 @@ mocha.describe('Users', (): void => {
                         type: 'array',
                         minItems: 1,
                         maxItems: 1,
-                        items: userSchema,
+                        items: userSchema
                     })
                     return done()
                 })
@@ -373,7 +399,7 @@ mocha.describe('Users', (): void => {
                 .get('/users')
                 .query({
                     offset: 1,
-                    length: 1,
+                    length: 1
                 })
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
@@ -381,33 +407,39 @@ mocha.describe('Users', (): void => {
                         type: 'array',
                         minItems: 1,
                         maxItems: 1,
-                        items: userSchema,
+                        items: userSchema
                     })
                     return done()
                 })
         })
 
-        mocha.it('Should 400 when getting an user page without query params', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(400)
-                    return done()
-                })
-        })
+        mocha.it(
+            'Should 400 when getting an user page without query params',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(400)
+                        return done()
+                    })
+            }
+        )
 
-        mocha.it('Should 413 when requesting for an oversized users page', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users')
-                .query({
-                    offset: 0,
-                    length: 101,
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(413)
-                    return done()
-                })
-        })
+        mocha.it(
+            'Should 413 when requesting for an oversized users page',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users')
+                    .query({
+                        offset: 0,
+                        length: 101
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(413)
+                        return done()
+                    })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -421,7 +453,6 @@ mocha.describe('Users', (): void => {
                             return done()
                         })
                 })
-
         })
     })
 
@@ -434,9 +465,10 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    createdUserId = res.body.userId
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    createdUserId = res.body.id
                     return done()
                 })
         })
@@ -447,27 +479,34 @@ mocha.describe('Users', (): void => {
                 .end((err: Error, res: superagent.Response): void => {
                     res.should.be.status(200)
                     res.body.should.be.jsonSchema(userSchema)
+                    UserSchema_TestBigInts(res)
                     return done()
                 })
         })
 
-        mocha.it('Should 400 when getting an user with a string as user ID', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users/bad')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(400)
-                    return done()
-                })
-        })
+        mocha.it(
+            'Should 400 when getting an user with a string as user ID',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users/bad')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(400)
+                        return done()
+                    })
+            }
+        )
 
-        mocha.it('Should 404 when getting a non existing user', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users/404')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(404)
-                    return done()
-                })
-        })
+        mocha.it(
+            'Should 404 when getting a non existing user',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users/404')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(404)
+                        return done()
+                    })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -488,60 +527,67 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    createdUser = res.body.userId
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    createdUser = res.body.id
                     return done()
                 })
         })
 
-        mocha.it('Should change an user\'s data',
-            (done: mocha.Done): void => {
-                chai.request(serviceInstance.app)
-                    .put('/users/' + createdUser)
-                    .send({
-                        wins: 16,
-                    })
-                    .end((err: Error, res: superagent.Response): void => {
-                        res.should.be.status(200)
-                        return done()
-                    })
-            })
-        mocha.it('Check if the user\'s data was changed successfully',
+        mocha.it("Should change an user's data", (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .put('/users/' + createdUser)
+                .send({
+                    wins: 16
+                })
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    return done()
+                })
+        })
+        mocha.it(
+            "Check if the user's data was changed successfully",
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .get('/users/' + createdUser)
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(200)
                         res.body.should.be.jsonSchema(userSchema)
+                        UserSchema_TestBigInts(res)
                         chai.expect(res.body.wins).equal(16)
                         return done()
                     })
-            })
-        mocha.it('Should 400 when updated an user\'s data slots with an invalid user ID',
+            }
+        )
+        mocha.it(
+            "Should 400 when updated an user's data slots with an invalid user ID",
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .put('/users/bad')
                     .send({
-                        kills: 300,
+                        kills: 300
                     })
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(400)
                         return done()
                     })
-            })
-        mocha.it('Should 404 when changing an unexisting user\'s data',
+            }
+        )
+        mocha.it(
+            "Should 404 when changing an unexisting user's data",
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .put('/users/404/')
                     .send({
-                        deaths: 11,
+                        deaths: 11
                     })
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(404)
                         return done()
                     })
-            })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -550,7 +596,6 @@ mocha.describe('Users', (): void => {
                 .then(() => {
                     return done()
                 })
-
         })
     })
 
@@ -564,32 +609,34 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    firstUser = res.body.userId
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    firstUser = res.body.id
                     chai.request(serviceInstance.app)
                         .post('/users')
                         .send({
                             username: 'gamer',
                             playername: 'cso2player',
-                            password: '123456',
-                        }).then((res2: superagent.Response) => {
-                            secondUser = res2.body.userId
+                            password: '123456'
+                        })
+                        .then((res2: superagent.Response) => {
+                            secondUser = res2.body.id
                             return done()
                         })
                 })
         })
 
-        mocha.it('Should delete an user',
-            (done: mocha.Done): void => {
-                chai.request(serviceInstance.app)
-                    .delete('/users/' + firstUser)
-                    .end((err: Error, res: superagent.Response): void => {
-                        res.should.be.status(200)
-                        return done()
-                    })
-            })
-        mocha.it('Should 404 when getting the deleted user',
+        mocha.it('Should delete an user', (done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .delete('/users/' + firstUser)
+                .end((err: Error, res: superagent.Response): void => {
+                    res.should.be.status(200)
+                    return done()
+                })
+        })
+        mocha.it(
+            'Should 404 when getting the deleted user',
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .get('/users/' + firstUser)
@@ -597,17 +644,21 @@ mocha.describe('Users', (): void => {
                         res.should.be.status(404)
                         return done()
                     })
-            })
-        mocha.it('Should 404 when deleting a non existing user',
+            }
+        )
+        mocha.it(
+            'Should 404 when deleting a non existing user',
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
-                    .delete('/inventory/404')
+                    .delete('/users/404')
                     .end((err: Error, res: superagent.Response): void => {
                         res.should.be.status(404)
                         return done()
                     })
-            })
-        mocha.it('Should 400 when deleting an user with a string as user ID',
+            }
+        )
+        mocha.it(
+            'Should 400 when deleting an user with a string as user ID',
             (done: mocha.Done): void => {
                 chai.request(serviceInstance.app)
                     .delete('/users/bad')
@@ -615,7 +666,8 @@ mocha.describe('Users', (): void => {
                         res.should.be.status(400)
                         return done()
                     })
-            })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -623,7 +675,6 @@ mocha.describe('Users', (): void => {
                 .then(() => {
                     return done()
                 })
-
         })
     })
 
@@ -636,134 +687,48 @@ mocha.describe('Users', (): void => {
                 .send({
                     username: 'testuser',
                     playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    createdUserId = res.body.userId
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    createdUserId = res.body.id
                     return done()
                 })
         })
 
-        mocha.it('Should get a specific user by its username', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users/byname/testuser')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(200)
-                    res.body.should.be.jsonSchema(userSchema)
-                    return done()
-                })
-        })
-        mocha.it('Should 400 when getting an user without an username', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users/byname/')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(400)
-                    return done()
-                })
-        })
-        mocha.it('Should 404 when getting a non existing user', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .get('/users/byname/idontexist')
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(404)
-                    return done()
-                })
-        })
-
-        mocha.after((done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .delete('/users/' + createdUserId)
-                .send()
-                .then(() => {
-                    return done()
-                })
-        })
-    })
-
-    mocha.describe('POST /users/auth/login and /users/auth/logout', (): void => {
-        let createdUserId: number = 0
-
-        mocha.before((done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users')
-                .send({
-                    username: 'testuser',
-                    playername: 'TestingUser',
-                    password: '222222',
-                }).then((res: superagent.Response) => {
-                    createdUserId = res.body.userId
-                    return done()
-                })
-        })
-
-        mocha.it('Should authenticate an user', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users/auth/login')
-                .send({
-                    username: 'testuser',
-                    password: '222222',
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(200)
-                    res.body.should.be.jsonSchema({
-                        type: 'object',
-                        required: [
-                            'userId',
-                        ],
-                        properties: {
-                            userId: {
-                                type: 'number',
-                            },
-                        },
+        mocha.it(
+            'Should get a specific user by its username',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users/byname/testuser')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(200)
+                        res.body.should.be.jsonSchema(userSchema)
+                        return done()
                     })
-                    res.body.userId.should.be.equal(createdUserId)
-
-                    const sessionsNum: number = SessionCounter.Get()
-                    sessionsNum.should.be.equal(1)
-
-                    return done()
-                })
-        })
-
-        mocha.it('Should log user out', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users/auth/logout')
-                .send({
-                    userId: createdUserId
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(200)
-
-                    const sessionsNum: number = SessionCounter.Get()
-                    sessionsNum.should.be.equal(0)
-
-                    return done()
-                })
-        })
-
-        mocha.it('Should 400 when authenticating with a bad query', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users/auth/login')
-                .send({
-                    uuuuser: 'yes\n\r\t',
-                    aeiou: 6789,
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(400)
-                    return done()
-                })
-        })
-        mocha.it('Should 401 when authenticating with bad user credentials', (done: mocha.Done): void => {
-            chai.request(serviceInstance.app)
-                .post('/users/auth/login')
-                .send({
-                    username: 'baduser',
-                    password: 'badpassword',
-                })
-                .end((err: Error, res: superagent.Response): void => {
-                    res.should.be.status(401)
-                    return done()
-                })
-        })
+            }
+        )
+        mocha.it(
+            'Should 400 when getting an user without an username',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users/byname/')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(400)
+                        return done()
+                    })
+            }
+        )
+        mocha.it(
+            'Should 404 when getting a non existing user',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .get('/users/byname/idontexist')
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(404)
+                        return done()
+                    })
+            }
+        )
 
         mocha.after((done: mocha.Done): void => {
             chai.request(serviceInstance.app)
@@ -775,7 +740,116 @@ mocha.describe('Users', (): void => {
         })
     })
 
-    mocha.after(async (): Promise<void> => {
-        await serviceInstance.stop()
-    })
+    mocha.describe(
+        'POST /users/auth/login and /users/auth/logout',
+        (): void => {
+            let createdUserId: number = 0
+
+            mocha.before((done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users')
+                    .send({
+                        username: 'testuser',
+                        playername: 'TestingUser',
+                        password: '222222'
+                    })
+                    .then((res: superagent.Response) => {
+                        createdUserId = res.body.id
+                        return done()
+                    })
+            })
+
+            mocha.it(
+                'Should authenticate an user',
+                (done: mocha.Done): void => {
+                    chai.request(serviceInstance.app)
+                        .post('/users/auth/login')
+                        .send({
+                            username: 'testuser',
+                            password: '222222'
+                        })
+                        .end((err: Error, res: superagent.Response): void => {
+                            res.should.be.status(200)
+                            res.body.should.be.jsonSchema({
+                                type: 'object',
+                                required: ['userId'],
+                                properties: {
+                                    userId: {
+                                        type: 'number'
+                                    }
+                                }
+                            })
+                            res.body.userId.should.be.equal(createdUserId)
+
+                            const sessionsNum: number = SessionCounter.Get()
+                            sessionsNum.should.be.equal(1)
+
+                            return done()
+                        })
+                }
+            )
+
+            mocha.it('Should log user out', (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users/auth/logout')
+                    .send({
+                        userId: createdUserId
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(200)
+
+                        const sessionsNum: number = SessionCounter.Get()
+                        sessionsNum.should.be.equal(0)
+
+                        return done()
+                    })
+            })
+
+            mocha.it(
+                'Should 400 when authenticating with a bad query',
+                (done: mocha.Done): void => {
+                    chai.request(serviceInstance.app)
+                        .post('/users/auth/login')
+                        .send({
+                            uuuuser: 'yes\n\r\t',
+                            aeiou: 6789
+                        })
+                        .end((err: Error, res: superagent.Response): void => {
+                            res.should.be.status(400)
+                            return done()
+                        })
+                }
+            )
+            mocha.it(
+                'Should 401 when authenticating with bad user credentials',
+                (done: mocha.Done): void => {
+                    chai.request(serviceInstance.app)
+                        .post('/users/auth/login')
+                        .send({
+                            username: 'baduser',
+                            password: 'badpassword'
+                        })
+                        .end((err: Error, res: superagent.Response): void => {
+                            res.should.be.status(401)
+                            return done()
+                        })
+                }
+            )
+
+            mocha.after((done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .delete('/users/' + createdUserId)
+                    .send()
+                    .then(() => {
+                        return done()
+                    })
+            })
+        }
+    )
+
+    mocha.after(
+        async (): Promise<void> => {
+            await serviceInstance.stop()
+        }
+    )
 })
