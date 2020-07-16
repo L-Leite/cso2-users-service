@@ -269,10 +269,10 @@ export class User {
     public unlocked_avatars: number[]
 
     public title: number
-    public unlockedTitles: number[]
+    public unlocked_titles: number[]
     public signature: string
 
-    public unlockedAchievements: number[]
+    public unlocked_achievements: number[]
 
     public netcafe_name: string
 

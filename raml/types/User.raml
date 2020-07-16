@@ -2,7 +2,7 @@
 
 description: An user's full information.
 properties:      
-  userId: 
+  id: 
     type: integer
     description: The user's ID
     example: 123
@@ -39,19 +39,19 @@ properties:
     minimum: 1
     maximum: 255
     example: 13
-  curExp:
+  cur_xp:
     type: integer
     description: The user's current experience
     example: 3500
-  maxXp:
+  max_xp:
     type: integer
     description: The user's level maximum experience
     example: 5000
-  vipLevel:
+  vip_level:
     type: integer
     description: The user's VIP (paid) level
     example: 2
-  vipXp:
+  vip_xp:
     type: integer
     description: The user's VIP experience number
     example: 1000
@@ -60,12 +60,12 @@ properties:
     type: integer
     description: The user's rank
     example: 50
-  rankFrame:
+  rank_frame:
     type: integer
     description: The user's rank cosmetic frame
     example: 2
 
-  playedMatches:
+  played_matches:
     type: integer
     description: The lifetime number of matches played
     example: 28
@@ -73,11 +73,7 @@ properties:
     type: integer
     description: The user's match wins
     example: 5
-  losses:
-    type: integer
-    description: The user's match losses
-    example: 10
-  secondsPlayed:
+  seconds_played:
     type: integer
     description: The lifetime number of seconds of gameplay time.
     example: 58031
@@ -107,7 +103,7 @@ properties:
     type: integer
     description: The User's equipped avatar. (?)
     example: 1005
-  unlockedAvatars:
+  unlocked_avatars:
     type: integer[]
     description: The User's unlocked avatars. (?)
     minItems: 128
@@ -117,32 +113,11 @@ properties:
       - 0xFF
       - ...
 
-  netCafeName:
-    type: string
-    description: The name of the current NetCafe
-    example: 'Some netcafe'
-
-  clanName:
-    type: string
-    description: The name of the User's current clan
-    example: 'My cool clan'
-  clanMark:
-    type: integer
-    description: The mark of the User's current clan
-    minimum: 0
-    maximum: 7
-    example: 2
-
-  worldRank:
-    type: integer
-    description: The User's world ranking
-    example: 50
-
-  titleId:
+  title:
     type: integer
     description: The User's title ID
     example: 50
-  unlockedAvatars:
+  unlocked_titles:
     type: integer[]
     description: The User's unlocked titles. (?)
     minItems: 128
@@ -156,16 +131,7 @@ properties:
     description: The user's custom signature
     example: 'My cool clan'
 
-  bestGamemode:
-    type: integer
-    description: The User's most played (?) game mode
-    example: 5
-  bestMap:
-    type: integer
-    description: The User's most played (?) map
-    example: 3
-
-  unlockedAchievements:
+  unlocked_achievements:
     type: integer[]
     description: The User's unlocked achievements.
     minItems: 128
@@ -175,27 +141,57 @@ properties:
       - 0x00
       - ...
 
-  skillHumanCurXp:
+  netcafe_name:
+    type: string
+    description: The name of the current NetCafe
+    example: 'Some netcafe'
+
+  clan_name:
+    type: string
+    description: The name of the User's current clan
+    example: 'My cool clan'
+  clan_mark:
+    type: integer
+    description: The mark of the User's current clan
+    minimum: 0
+    maximum: 7
+    example: 2
+
+  world_rank:
+    type: integer
+    description: The User's world ranking
+    example: 50
+
+  best_gamemode:
+    type: integer
+    description: The User's most played (?) game mode
+    example: 5
+  best_map:
+    type: integer
+    description: The User's most played (?) map
+    example: 3
+
+  skill_human_curxp:
     type: integer
     description: The User's skill factory current human experience
     example: 380
-  skillHumanMaxXp:
+  skill_human_maxxp:
     type: integer
     description: The User's skill factory maximum human experience
     example: 2500
-  skillHumanPoints:
+  skill_human_points:
     type: integer
     description: The User's skill factory human points
     example: 10
-  skillZombieCurXp:
+  skill_zombie_curxp:
     type: integer
     description: The User's skill factory current zombie experience
     example: 380
-  skillZombieMaxXp:
+  skill_zombie_maxxp:
     type: integer
     description: The User's skill factory maximum zombie experience
     example: 2500
-  skillZombiePoints:
+  skill_zombie_points:
     type: integer
     description: The User's skill factory zombie points
     example: 10

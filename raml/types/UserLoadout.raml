@@ -2,19 +2,19 @@
 
 description: An user's inventory loadout.
 properties:
-  ownerId:
+  owner_id:
     type: integer
     description: The owning user's ID
-  loadoutNum: 
+  loadout_num: 
     type: integer
     description: The user's loadout number
     minimum: 0
     maximum: 2
-  primary: 
+  primary_weapon: 
     type: integer
     description: The user's loadout primary weapon item ID
     example: 10501
-  secondary: 
+  secondary_weapon: 
     type: integer
     description: The user's loadout secondary weapon item ID
     example: 10321
