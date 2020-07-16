@@ -1,6 +1,7 @@
 const eslint = require('gulp-eslint')
 const gulp = require('gulp')
 const log = require('fancy-log')
+const sourcemaps = require('gulp-sourcemaps')
 const mocha = require('gulp-mocha')
 const ts = require('gulp-typescript')
 const typedoc = require('gulp-typedoc')
@@ -34,7 +35,17 @@ gulp.task('eslint', () => {
 gulp.task('typescript', () => {
     log('Transpiling source code...')
     const project = ts.createProject('tsconfig.json')
-    return project.src().pipe(project()).pipe(gulp.dest('dist'))
+    return project
+        .src()
+        .pipe(sourcemaps.init())
+        .pipe(project())
+        .pipe(
+            sourcemaps.write('.', {
+                includeContent: false,
+                sourceRoot: '../src'
+            })
+        )
+        .pipe(gulp.dest('dist'))
 })
 
 gulp.task('build', gulp.series('eslint', 'typescript'))
