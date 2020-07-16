@@ -117,6 +117,37 @@ traits:
             description: The user does not exist.
           500:
             description: An internal error has occured.
+    /validate:
+      post:
+        description: Checks if the credentials are valid.
+        body:
+          application/json:
+            properties:
+              username: 
+                type: string
+                description: The user's name
+                example: "gamer_X"
+              password:
+                type: integer
+                description: The user's password
+                example: "myc00lp4ssw0rd"
+        responses:
+          200:
+            description: The credentials are valid.
+            body:
+              application/json:
+                properties:
+                  userId:
+                    type: integer
+                    description: The user ID that matches the credentials.
+                    example: 25
+          400:
+            description: The request is malformed.
+          401:
+            description: The credentials are invalid.
+          500:
+            description: An internal error has occured.
+    
 /inventory:
   description: Endpoint for requests about users' inventories
   /{userId}:

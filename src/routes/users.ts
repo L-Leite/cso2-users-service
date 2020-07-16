@@ -11,36 +11,43 @@ import { SessionCounter } from 'sessioncounter'
 export class UsersRoute {
     public static InstallRoutes(app: express.Express): void {
         app.route('/users')
-            .get((req: express.Request, res: express.Response) =>
-                UsersRoute.onGetAllUsers(req, res)
+            .get(
+                async (req: express.Request, res: express.Response) =>
+                    await UsersRoute.onGetAllUsers(req, res)
             )
-            .post((req: express.Request, res: express.Response) =>
-                UsersRoute.onPostUsers(req, res)
+            .post(
+                async (req: express.Request, res: express.Response) =>
+                    await UsersRoute.onPostUsers(req, res)
             )
         app.route('/users/:userId')
-            .get((req: express.Request, res: express.Response) =>
-                UsersRoute.onGetUsersById(req, res)
+            .get(
+                async (req: express.Request, res: express.Response) =>
+                    await UsersRoute.onGetUsersById(req, res)
             )
-            .put((req: express.Request, res: express.Response) =>
-                UsersRoute.onPutUsersById(req, res)
+            .put(
+                async (req: express.Request, res: express.Response) =>
+                    await UsersRoute.onPutUsersById(req, res)
             )
-            .delete((req: express.Request, res: express.Response) =>
-                UsersRoute.onDeleteUserById(req, res)
+            .delete(
+                async (req: express.Request, res: express.Response) =>
+                    await UsersRoute.onDeleteUserById(req, res)
             )
-        app.route(
-            '/users/auth/login'
-        ).post((req: express.Request, res: express.Response) =>
-            UsersRoute.onPostLogin(req, res)
+        app.route('/users/auth/login').post(
+            async (req: express.Request, res: express.Response) =>
+                await UsersRoute.onPostLogin(req, res)
         )
         app.route(
             '/users/auth/logout'
         ).post((req: express.Request, res: express.Response) =>
             UsersRoute.onPostLogout(req, res)
         )
-        app.route(
-            '/users/byname/:username'
-        ).get((req: express.Request, res: express.Response) =>
-            UsersRoute.onGetUsersByName(req, res)
+        app.route('/users/auth/validate').post(
+            async (req: express.Request, res: express.Response) =>
+                await UsersRoute.onPostValidate(req, res)
+        )
+        app.route('/users/byname/:username').get(
+            async (req: express.Request, res: express.Response) =>
+                await UsersRoute.onGetUsersByName(req, res)
         )
     }
 
@@ -330,6 +337,51 @@ export class UsersRoute {
             // TODO: do anything with this maybe?
             SessionCounter.Decrement()
             return res.status(200).json().end()
+        } catch (error) {
+            LogInstance.error(error)
+            return res.status(500).end()
+        }
+    }
+
+    /**
+     * called when a POST request to /users/auth/validate is done
+     * checks if these credentials are valid
+     * returns 200 if the they are
+     * returns 400 if the request is malformed
+     * returns 401 if the credentials are invalid
+     * returns 500 if an internal error occured
+     * @param req the request data
+     * @param res the response data
+     */
+    private static async onPostValidate(
+        req: express.Request,
+        res: express.Response
+    ) {
+        type validateBody = {
+            username: string
+            password: string
+        }
+
+        const body = req.body as validateBody
+
+        const username: string = body.username
+        const password: string = body.password
+
+        if (username == null || password == null) {
+            return res.status(400).end()
+        }
+
+        try {
+            const foundUserId = await User.validateCredentials(
+                username,
+                password
+            )
+
+            if (foundUserId == null) {
+                return res.status(401).json().end()
+            }
+
+            return res.status(200).json({ userId: foundUserId }).end()
         } catch (error) {
             LogInstance.error(error)
             return res.status(500).end()

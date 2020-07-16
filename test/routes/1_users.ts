@@ -846,6 +846,89 @@ mocha.describe('Users', (): void => {
             })
         }
     )
+    mocha.describe('POST /users/auth/validate', (): void => {
+        let createdUserId: number = 0
+
+        mocha.before((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .post('/users')
+                .send({
+                    username: 'testuser',
+                    playername: 'TestingUser',
+                    password: '222222'
+                })
+                .then((res: superagent.Response) => {
+                    createdUserId = res.body.id
+                    return done()
+                })
+        })
+
+        mocha.it(
+            'Should say credentials are valid',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users/auth/validate')
+                    .send({
+                        username: 'testuser',
+                        password: '222222'
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(200)
+                        res.body.should.be.jsonSchema({
+                            type: 'object',
+                            required: ['userId'],
+                            properties: {
+                                userId: {
+                                    type: 'number'
+                                }
+                            }
+                        })
+                        res.body.userId.should.be.equal(createdUserId)
+                        return done()
+                    })
+            }
+        )
+
+        mocha.it(
+            'Should 400 when validating with a bad query',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users/auth/validate')
+                    .send({
+                        uuuuser: 'yes\n\r\t',
+                        aeiou: 6789
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(400)
+                        return done()
+                    })
+            }
+        )
+        mocha.it(
+            'Should 401 when validating with bad user credentials',
+            (done: mocha.Done): void => {
+                chai.request(serviceInstance.app)
+                    .post('/users/auth/validate')
+                    .send({
+                        username: 'baduser',
+                        password: 'badpassword'
+                    })
+                    .end((err: Error, res: superagent.Response): void => {
+                        res.should.be.status(401)
+                        return done()
+                    })
+            }
+        )
+
+        mocha.after((done: mocha.Done): void => {
+            chai.request(serviceInstance.app)
+                .delete('/users/' + createdUserId)
+                .send()
+                .then(() => {
+                    return done()
+                })
+        })
+    })
 
     mocha.after(
         async (): Promise<void> => {
