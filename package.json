@@ -1,6 +1,6 @@
 {
     "name": "cso2-users-service",
-    "version": "0.1.3",
+    "version": "0.2.0",
     "repository": "github:L-Leite/cso2-users-service",
     "description": "Users service for a Nexon's Counter-Strike: Online 2 master server",
     "author": "Luís Leite",
