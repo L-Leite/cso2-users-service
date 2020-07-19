@@ -10,7 +10,7 @@ environment:
         - CURRENT_NODE_VERSION: 10
 
 services:
-    - postgresql12
+    - postgresql
 
 cache:
     - 'node_modules'
