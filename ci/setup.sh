@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # init db
-.../config/db/init_db.sh
+./config/db/init_db.sh
 
 # install and use the current node version set in the environment variable
 nvm install $CURRENT_NODE_VERSION
