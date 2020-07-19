@@ -1,42 +1,42 @@
-version: 0.1.3-{build}
+version: 0.2.0-{build}
 
 image:
-  - Ubuntu1804
+    - Ubuntu2004
 
 environment:
-  matrix:
-    - CURRENT_NODE_VERSION: 13
-    - CURRENT_NODE_VERSION: 12
-    - CURRENT_NODE_VERSION: 10
+    matrix:
+        - CURRENT_NODE_VERSION: 14
+        - CURRENT_NODE_VERSION: 12
+        - CURRENT_NODE_VERSION: 10
 
 services:
-  - mongodb
+    - postgres12
 
 cache:
-  - 'node_modules'
+    - 'node_modules'
 
 install:
-  - sh: source ./ci/setup.sh
+    - sh: source ./ci/setup.sh
 
 build_script:
-  - sh: source ./ci/build.sh
+    - sh: source ./ci/build.sh
 
 after_build:
-  - sh: source ./ci/pack.sh
+    - sh: source ./ci/pack.sh
 
 test_script:
-  - sh: source ./ci/test.sh
+    - sh: source ./ci/test.sh
 
 artifacts:
-- path: cso2-users-service_*.tar.gz
-  name: service_build
+    - path: cso2-users-service_*.tar.gz
+      name: service_build
 
 deploy:
-- provider: GitHub
-  release: Version $(SERVICE_VERSION)
-  auth_token:
-    secure: XnUsE3jqzulQ4cWVkK2ALBR7qfnfwbBdoMDChmcnx1RcGtRgXV0QLMPo+GcIf8YU
-  artifact: service_build
-  on:
-    APPVEYOR_REPO_TAG: true
-    CURRENT_NODE_VERSION: 10
+    - provider: GitHub
+      release: Version $(SERVICE_VERSION)
+      auth_token:
+          secure: XnUsE3jqzulQ4cWVkK2ALBR7qfnfwbBdoMDChmcnx1RcGtRgXV0QLMPo+GcIf8YU
+      artifact: service_build
+      on:
+          APPVEYOR_REPO_TAG: true
+          CURRENT_NODE_VERSION: 12
