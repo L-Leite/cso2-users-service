@@ -17,8 +17,5 @@ yarn --version
 echo 'postgresql version:'
 psql --version
 
-# init db
-./config/init_db.sh
-
 # install dependencies
 yarn install
