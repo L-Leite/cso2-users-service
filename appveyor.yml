@@ -17,6 +17,7 @@ cache:
 
 install:
     - sh: source ./ci/setup.sh
+    - sh: source ./config/db/init_db.sh
 
 build_script:
     - sh: source ./ci/build.sh
