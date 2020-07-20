@@ -12,7 +12,7 @@ echo "export const INVENTORY_ITEM_OID = $new_oid" > ./src/config/inventory_item_
 
 # use the CI database user
 sed -i -e "s/username: 'cso2_user'/username: 'postgres'/g" ./src/config/db.ts
-sed -i -e "s/password: 'cso2'/\/\/ password: 'cso2'/g" ./src/config/db.ts
+sed -i -e "s/password: 'cso2'/password: 'Password12!'/g" ./src/config/db.ts
 
 # transpile source code
 npx gulp build
