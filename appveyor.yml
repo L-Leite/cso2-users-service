@@ -27,6 +27,10 @@ after_build:
 test_script:
     - sh: source ./ci/test.sh
 
+on_finish:
+    - sh: export APPVEYOR_SSH_BLOCK=true
+    - sh: curl -sflL 'https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-ssh.sh' | bash -e -
+
 artifacts:
     - path: cso2-users-service_*.tar.gz
       name: service_build
