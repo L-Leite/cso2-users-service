@@ -274,6 +274,8 @@ export class User {
 
     public unlocked_achievements: number[]
 
+    public campaign_flags: number
+
     public netcafe_name: string
 
     public clan_name: string

@@ -70,6 +70,8 @@ CREATE TABLE public.users
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, 0, 0, 0, 0}',
 
+    campaign_flags integer DEFAULT 0,
+
     netcafe_name text DEFAULT '',
 
     clan_name text DEFAULT '',
